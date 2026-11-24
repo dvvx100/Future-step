@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Future Step programėlės prototipas</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTUiIGZpbGw9IiNGN0Y5RkMiLz48cmVjdCB4PSIxMSIgeT0iNDQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI5IiByeD0iMS42IiBmaWxsPSIjMTQyQzUwIi8+PHJlY3QgeD0iNDYiIHk9IjQ1LjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjUuOCIgcng9Ii42IiBmaWxsPSIjRjdGOUZDIi8+PHJlY3QgeD0iMTgiIHk9IjM1IiB3aWR0aD0iMzMiIGhlaWdodD0iOSIgcng9IjEuNiIgZmlsbD0iI0E5QzdFOCIvPjxyZWN0IHg9IjQ2IiB5PSIzNi42IiB3aWR0aD0iMyIgaGVpZ2h0PSI1LjgiIHJ4PSIuNiIgZmlsbD0iI0Y3RjlGQyIvPjxyZWN0IHg9IjI1IiB5PSIyNiIgd2lkdGg9IjI2IiBoZWlnaHQ9IjkiIHJ4PSIxLjYiIGZpbGw9IiNGMjhBMzIiLz48cmVjdCB4PSI0NiIgeT0iMjcuNiIgd2lkdGg9IjMiIGhlaWdodD0iNS44IiByeD0iLjYiIGZpbGw9IiNGN0Y5RkMiLz48cGF0aCBkPSJNMzMuNSAxOS41aDl2NC4ycS00LjUgMi4yLTkgMHoiIGZpbGw9IiMxNDJDNTAiLz48cGF0aCBkPSJNMjggMTguNUwzOCAxNC42TDQ4IDE4LjVMMzggMjIuNFoiIGZpbGw9IiMxNDJDNTAiLz48cGF0aCBkPSJNMzggMTguNUw0NS42IDE5LjRWMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YyOEEzMiIgc3Ryb2tlLXdpZHRoPSIxLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjQ1LjYiIGN5PSIyNC42IiByPSIxLjMiIGZpbGw9IiNGMjhBMzIiLz48L3N2Zz4=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: desktop = phone frame centred beside a short guide panel; phone = the app fills the screen. Single light theme, institutional look. */
+:root{
+  --page:#E1E9F3;
+  --bg:#F7F9FC;
+  --surface:#FFFFFF;
+  --ink:#0F1E36;
+  --muted:#5A6A80;
+  --line:#DCE4EE;
+  --primary:#142C50;
+  --primary-soft:#E2ECF7;
+  --ok:#1E7A4C;
+  --ok-soft:#E5F3EB;
+  --font:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #F28A32;outline-offset:2px;border-radius:8px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+.stage{min-height:100%;display:flex;align-items:center;justify-content:center;gap:48px;padding:20px}
+.guide{width:300px;display:grid;gap:14px;align-content:start;max-height:calc(100vh - 40px);overflow-y:auto;padding-right:6px}
+.guide nav button{padding:5px 10px!important}
+.guide h1{font-size:1.35rem;margin:0;font-weight:600;text-wrap:balance}
+.guide p{margin:0;color:var(--muted);font-size:.92rem}
+.guide nav{display:grid;gap:4px}
+.guide nav button{text-align:left;background:none;border:none;padding:7px 10px;border-radius:8px;cursor:pointer;color:var(--ink);font-size:.92rem}
+.guide nav button:hover{background:#D6E2F0}
+.guide nav button.on{background:var(--surface);font-weight:600;box-shadow:0 1px 2px rgba(15,27,45,.08)}
+.guide .note{font-size:.82rem;color:var(--muted);border-top:1px solid #CCD8E6;padding-top:12px}
+.guide .label{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted)}
+
+.phone{width:390px;height:min(812px,calc(100vh - 40px));height:min(812px,calc(100dvh - 40px));min-height:600px;background:var(--bg);border-radius:44px;border:10px solid #0F1E36;box-shadow:0 30px 60px -30px rgba(15,27,45,.45);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.status{height:40px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:.8rem;font-weight:600;background:var(--bg)}
+.status .icons{display:flex;gap:6px;align-items:center}
+@media (max-width:900px){.guide{display:none}}
+@media (max-width:520px){
+  .stage{padding:0;display:block;height:100%}
+  .phone{width:100%;height:100%;min-height:0;border:none;border-radius:0;box-shadow:none}
+  .status{display:none}
+}
+
+#app{flex:1;display:flex;flex-direction:column;min-height:0;position:relative}
+.top{flex:none;background:var(--surface);border-bottom:1px solid var(--line);padding:10px 16px 12px;display:flex;align-items:center;gap:10px;min-height:56px}
+.top h2{font-size:1.05rem;font-weight:600;margin:0;flex:1}
+.back{border:none;background:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;cursor:pointer;margin-left:-8px}
+.back:hover{background:var(--bg)}
+.content{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.content.flush{padding:0;gap:0}
+
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(5,1fr);background:var(--surface);border-top:1px solid var(--line);padding:6px 4px 10px}
+.tabbar button{border:none;background:none;display:grid;justify-items:center;gap:2px;font-size:.7rem;color:var(--muted);cursor:pointer;padding:4px 0}
+.tabbar button svg{width:22px;height:22px}
+.tabbar button.on{color:var(--primary);font-weight:600}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px}
+.card h3{margin:0;font-size:1rem;font-weight:600}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.label{font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--muted)}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--primary);background:var(--primary);color:#fff;font-weight:600;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--surface);color:var(--primary);border-color:var(--line)}
+.btn.text{background:none;border:none;color:var(--primary);padding:8px}
+.btn.danger{background:#A32D2D;border-color:#A32D2D}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+
+.field{display:grid;gap:6px;font-weight:500;font-size:.88rem}
+.field input,.field select,.field textarea{font:inherit;font-weight:400;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px var(--primary-soft)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 0;cursor:pointer;font-weight:500}
+.seg button.on{border-color:var(--primary);background:var(--primary-soft);color:var(--primary);font-weight:600}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.88rem}
+.check input{width:18px;height:18px;margin-top:2px;accent-color:var(--primary)}
+
+/* welcome */
+.welcome{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:36px 24px 28px;background:var(--bg)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.2rem}
+.brand svg{width:56px;height:56px}
+.welcome h1{font-size:1.75rem;line-height:1.2;margin:0 0 12px;font-weight:600;text-wrap:balance}
+.steps-mini{display:grid;gap:10px;margin-top:22px}
+.steps-mini div{display:flex;gap:12px;align-items:center;font-size:.93rem}
+.steps-mini span{width:26px;height:26px;border-radius:50%;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-weight:600;font-size:.8rem;flex:none}
+
+/* journey */
+.journey{display:grid;gap:0}
+.jstep{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.jstep:last-child{border-bottom:none}
+.dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.72rem;font-weight:600;color:var(--muted);background:var(--surface)}
+.jstep.done .dot{background:var(--ok);border-color:var(--ok);color:#fff}
+.jstep.now .dot{border-color:var(--primary);color:var(--primary)}
+.jstep.locked{color:var(--muted)}
+.pill{font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--bg);color:var(--muted);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.now{background:var(--primary-soft);color:var(--primary)}
+.next{background:var(--primary);color:#fff;border:none}
+.next .muted{color:#B9CCE4}
+.next .btn{background:#fff;color:var(--primary);border-color:#fff}
+
+/* swipe */
+.progress{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.progress div{height:100%;background:var(--primary);transition:width .3s}
+.stack{position:relative;height:290px;touch-action:pan-y;user-select:none}
+.swipe{position:absolute;inset:0;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 24px -18px rgba(15,27,45,.5);display:grid;grid-template-rows:auto 1fr auto;padding:18px;cursor:grab;transition:transform .25s ease,opacity .25s}
+.swipe.dragging{transition:none;cursor:grabbing}
+.swipe .vs{display:grid;gap:10px;align-content:center}
+.swipe .opt{border:1px solid var(--line);border-radius:12px;padding:16px;font-weight:600;font-size:1.05rem;display:flex;justify-content:space-between;align-items:center}
+.swipe .opt.hl{border-color:var(--primary);background:var(--primary-soft);color:var(--primary)}
+.swipe .opt small{font-weight:500;color:var(--muted);font-size:.78rem}
+.bars{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:118px 1fr 22px;gap:10px;align-items:center;font-size:.88rem;font-weight:500}
+.bar .track{height:8px;border-radius:99px;background:var(--bg);overflow:hidden}
+.bar .fill{height:100%;background:#A9C7E8;border-radius:99px}
+.bar.lead .fill{background:var(--primary)}
+.bar .n{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:7px 13px;font-size:.86rem;font-weight:500;cursor:pointer}
+.chip.on{border-color:var(--primary);background:var(--primary-soft);color:var(--primary)}
+.strength{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.strength:last-child{border-bottom:none}
+.strength.no span{color:var(--muted);text-decoration:line-through}
+.yn{display:flex;gap:6px}
+.yn button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 10px;font-size:.8rem;cursor:pointer}
+.yn button.on-yes{border-color:var(--ok);background:var(--ok-soft);color:var(--ok);font-weight:600}
+.yn button.on-no{border-color:#B9C7D8;background:var(--bg);font-weight:600}
+
+/* chat */
+.chat{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:84%;padding:10px 14px;border-radius:16px;font-size:.93rem}
+.msg.ai{background:var(--surface);border:1px solid var(--line);border-top-left-radius:4px}
+.msg.me{align-self:flex-end;background:var(--primary);color:#fff;border-top-right-radius:4px}
+.msg-meta{font-size:.72rem;color:var(--muted);margin:-4px 0 2px 4px}
+.msg-meta button{border:none;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:.72rem;padding:0}
+.typing{display:inline-flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#9AAABF;animation:b 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.composer{flex:none;border-top:1px solid var(--line);background:var(--surface);padding:10px 12px;display:grid;gap:10px}
+.composer .chips{gap:6px}.composer .chip{padding:6px 11px;font-size:.82rem}
+.composer form{display:flex;gap:8px}
+.composer input{flex:1;font:inherit;padding:10px 14px;border:1px solid var(--line);border-radius:99px}
+.send{width:42px;height:42px;border-radius:50%;border:none;background:var(--primary);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+
+/* activities */
+.filters{flex:none;display:flex;gap:8px;overflow-x:auto;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--line)}
+.filters .chip{white-space:nowrap}
+.act{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:6px;text-align:left;cursor:pointer;width:100%}
+.act:hover{border-color:#B4C5DA}
+.act .t{font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--bg);color:var(--muted)}
+.tag.m{background:var(--primary-soft);color:var(--primary)}
+.facts{display:grid;gap:0}
+.facts div{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.facts div:last-child{border-bottom:none}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;font-weight:500}
+.opts{display:grid;gap:8px}
+.opts button{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:13px 14px;text-align:left;cursor:pointer;font-weight:500}
+.opts button.on{border-color:var(--primary);background:var(--primary-soft);color:var(--primary);font-weight:600}
+.ai-box{background:var(--primary-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+
+/* profile */
+.avatar{width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:600;font-size:1.2rem;flex:none}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.list button,.list .li{display:flex;justify-content:space-between;align-items:center;width:100%;padding:14px 16px;border:none;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer;font-size:.93rem}
+.list>*:last-child{border-bottom:none}
+.list .red{color:#A32D2D}
+.toggle{width:44px;height:26px;border-radius:99px;background:#C3CEDC;position:relative;flex:none;transition:background .2s}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle.on{background:var(--ok)}
+.toggle.on::after{left:21px}
+
+/* sheet & toast */
+.scrim{position:absolute;inset:0;background:rgba(15,27,45,.4);display:flex;align-items:flex-end;z-index:20}
+.sheet{background:var(--surface);width:100%;border-radius:20px 20px 0 0;padding:22px 20px 24px;display:grid;gap:14px;max-height:85%;overflow-y:auto}
+.sheet h3{margin:0;font-size:1.1rem;font-weight:600}
+.sheet ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:.92rem}
+.toast{position:absolute;left:16px;right:16px;bottom:84px;background:var(--ink);color:#fff;padding:12px 14px;border-radius:12px;font-size:.88rem;z-index:30;box-shadow:0 10px 24px -10px rgba(0,0,0,.5)}
+.empty{color:var(--muted);font-size:.9rem}
+
+/* v2 additions */
+.bar{grid-template-columns:1fr 26px;row-gap:4px}
+.bar .track{grid-column:1 / -1;grid-row:2}
+.wc{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted)}
+.wc b{font-variant-numeric:tabular-nums}
+.wc.ok b{color:var(--ok)}
+.wc.over b{color:#A32D2D}
+.prompts{margin:0;padding-left:18px;color:var(--muted);font-size:.88rem;display:grid;gap:2px}
+.quote{border-left:3px solid var(--primary);padding:4px 0 4px 12px;color:var(--muted);font-size:.9rem;font-style:italic}
+.top .avatar-btn{width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-weight:600;cursor:pointer}
+.search-list{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.search-list button{display:block;width:100%;text-align:left;padding:11px 14px;border:none;border-bottom:1px solid var(--line);background:none;cursor:pointer;font-size:.92rem}
+.search-list button:last-child{border-bottom:none}
+.search-list button:hover,.search-list button.on{background:var(--primary-soft)}
+.picked{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--primary);background:var(--primary-soft);border-radius:10px;padding:11px 14px;font-weight:500}
+.picked button{border:none;background:none;color:var(--primary);cursor:pointer;font-weight:600;font-size:.85rem}
+.rich{display:grid;gap:8px;max-width:92%}
+.mini{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:4px;text-align:left;width:100%;font-size:.9rem}
+.mini .t{font-weight:600}
+.mini .contact{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:6px;margin-top:4px}
+.mini .contact b{color:var(--ink);font-weight:600}
+.mini .acts-row{display:flex;gap:8px;margin-top:6px}
+.mini .acts-row button{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 0;font-size:.8rem;font-weight:600;color:var(--primary);cursor:pointer}
+.person{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}
+.person .avatar{width:44px;height:44px;font-size:.95rem}
+.kv{display:grid;gap:3px;font-size:.86rem}
+.kv span{color:var(--muted)}
+.slots{display:flex;flex-wrap:wrap;gap:8px}
+.section-title{font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--muted);margin:6px 0 -6px}
+.example{font-size:.72rem;font-weight:600;color:#8A6A00;background:#FBF3DC;border-radius:6px;padding:2px 7px;justify-self:start}
+a.link{color:var(--primary);font-weight:600}
+:root{--me:#1E8A78;--me-soft:#DFF3EE;--actc:#C85E14;--act-soft:#FDEBD8;--stu:#2F62A8;--stu-soft:#E2ECF7}
+.card{border-radius:16px;box-shadow:0 1px 2px rgba(20,44,80,.05)}
+.btn{border-radius:14px}
+.hello{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:end}
+.bubble{background:var(--surface);border:1px solid var(--line);border-radius:18px 18px 18px 4px;padding:12px 14px;display:grid;gap:10px;box-shadow:0 1px 2px rgba(20,44,80,.05)}
+.bubble p{margin:0}
+.hubs{display:grid;gap:10px}
+.hub{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;border-radius:16px;padding:14px;border:none;text-align:left;cursor:pointer;font:inherit;color:var(--ink)}
+.hub .ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff}
+.hub .ic svg{width:24px;height:24px}
+.hub b{display:block;font-size:1rem}
+.hub small{color:var(--muted);font-size:.82rem}
+.hub.me{background:var(--me-soft)}.hub.me .ic{background:var(--me)}
+.hub.ac{background:var(--act-soft)}.hub.ac .ic{background:#F28A32}
+.hub.st{background:var(--stu-soft)}.hub.st .ic{background:var(--stu)}
+.hub .cnt{font-size:.78rem;font-weight:600;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.75)}
+.band{flex:none;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 16px}
+.band .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff}
+.band .ic svg{width:22px;height:22px}
+.band b{display:block}
+.band span{font-size:.84rem;color:var(--muted)}
+.band.me{background:var(--me-soft)}.band.me .ic{background:var(--me)}
+.band.ac{background:var(--act-soft)}.band.ac .ic{background:#F28A32}
+.band.st{background:var(--stu-soft)}.band.st .ic{background:var(--stu)}
+.act.ac{border-left:4px solid #F28A32}
+.act.st{border-left:4px solid var(--stu)}
+.tag.ac{background:var(--act-soft);color:var(--actc)}
+.tag.st{background:var(--stu-soft);color:var(--stu)}
+.row>svg{flex:none!important}
+.streak{display:flex;align-items:center;gap:2px;border:none;background:none;cursor:pointer;padding:2px 6px 2px 2px;border-radius:12px;font:inherit;font-weight:700;font-size:.95rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.streak.lit{color:#D9681B;background:var(--act-soft)}
+.streak:hover{background:var(--bg)}
+.flame{transform-origin:50% 90%}
+.lit .flame,.flame.lit{animation:flick 1.6s ease-in-out infinite}
+@keyframes flick{0%,100%{transform:scale(1) rotate(0)}30%{transform:scale(1.06,.94) rotate(-2deg)}60%{transform:scale(.95,1.07) rotate(2deg)}}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.week div{display:grid;justify-items:center;gap:2px;font-size:.72rem;color:var(--muted)}
+.week div.today{font-weight:700;color:var(--ink)}
+@media (prefers-reduced-motion: reduce){.lit .flame,.flame.lit{animation:none}}
+.kicker{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:0}
+.kicker.me{color:var(--me)}.kicker.ac{color:var(--actc)}.kicker.st{color:var(--stu)}
+.card.me{border-top:4px solid var(--me)}
+.num{width:30px;height:30px;border-radius:50%;background:var(--stu);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.9rem;flex:none}
+.num.n1{background:#F28A32}
+.fit{font-size:.74rem;font-weight:700;color:var(--stu);background:var(--stu-soft);padding:3px 8px;border-radius:99px;white-space:nowrap}
+.tabbar button.on.t-acts{color:var(--actc)}.tabbar button.on.t-acts::before{background:#F28A32}
+.tabbar button.on.t-studies{color:var(--stu)}.tabbar button.on.t-studies::before{background:var(--stu)}
+.tour{position:absolute;inset:0;z-index:40}
+.tour .dim{position:absolute;inset:0;background:rgba(15,30,54,.55)}
+.tour .hole{position:absolute;border-radius:14px;box-shadow:0 0 0 9999px rgba(15,30,54,.55),0 0 0 3px #F28A32;pointer-events:none;transition:all .25s}
+.tbub{position:absolute;left:14px;right:14px;background:#fff;border-radius:18px;padding:14px;display:grid;grid-template-columns:52px 1fr;gap:12px;box-shadow:0 18px 40px -16px rgba(0,0,0,.5)}
+.tbub p{margin:0;font-size:.93rem}
+.tbub .tb{grid-column:1 / -1;display:flex;justify-content:space-between;align-items:center}
+.tdots{display:flex;gap:5px}.tdots i{width:7px;height:7px;border-radius:50%;background:var(--line)}.tdots i.on{background:#F28A32}
+.ai-row{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:end;max-width:92%}
+.ai-row .msg{max-width:100%}
+.pbar{height:8px;border-radius:99px;background:var(--primary-soft);overflow:hidden}
+.pbar div{height:100%;background:var(--me);border-radius:99px;transition:width .4s}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.badge{display:grid;justify-items:center;gap:4px;text-align:center;font-size:.72rem;color:var(--muted)}
+.badge i{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:2px dashed var(--line);font-style:normal;font-weight:700;color:var(--muted)}
+.badge.on i{background:var(--primary);border:2px solid var(--primary);color:#fff}
+.badge.on{color:var(--ink);font-weight:600}
+.lock{border:1px dashed #B4C5DA;background:var(--primary-soft);border-radius:14px;padding:14px 16px;display:grid;gap:8px}
+.lock b{display:flex;gap:8px;align-items:center}
+.plan{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:16px;display:grid;gap:8px}
+.plan.cur{border:2px solid var(--primary)}
+.plan ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:.88rem}
+.thumb{width:100%;max-height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.cv{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:10px;font-size:.88rem}
+.cv h4{margin:0;font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.dot-badge{position:relative}
+.dot-badge::after{content:"";position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#F28A32;border:2px solid #fff}
+.guide .seg{grid-template-columns:1fr 1fr}
+
+.tabbar button{position:relative}
+.tabbar button.on::before{content:"";position:absolute;top:-6px;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:#F28A32}
+.jstep.now .dot{border-color:#F28A32;color:#0F1E36}
+.pill.now{background:#FDEBD8;color:#9A4A06}
+.list .li{gap:12px;cursor:default}
+.list .li span{color:var(--muted);flex:none}
+.list .li b{text-align:right;font-weight:600;word-break:break-word;min-width:0}
+</style>
+</head>
+<body>
+<div class="stage">
+  <aside class="guide" aria-label="Prototipo ekranai">
+    <div>
+      <p class="label">Prototipas</p>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:6px"><svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#F7F9FC"/><rect x="11" y="44" width="40" height="9" rx="1.6" fill="#142C50"/><rect x="46" y="45.6" width="3" height="5.8" rx=".6" fill="#F7F9FC"/><rect x="18" y="35" width="33" height="9" rx="1.6" fill="#A9C7E8"/><rect x="46" y="36.6" width="3" height="5.8" rx=".6" fill="#F7F9FC"/><rect x="25" y="26" width="26" height="9" rx="1.6" fill="#F28A32"/><rect x="46" y="27.6" width="3" height="5.8" rx=".6" fill="#F7F9FC"/><path d="M33.5 19.5h9v4.2q-4.5 2.2-9 0z" fill="#142C50"/><path d="M28 18.5L38 14.6L48 18.5L38 22.4Z" fill="#142C50"/><path d="M38 18.5L45.6 19.4V24" fill="none" stroke="#F28A32" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="45.6" cy="24.6" r="1.3" fill="#F28A32"/></svg><h1 style="margin:0">Future Step programėlė</h1></div>
+    </div>
+    <p>DI vedlys mokiniui nuo savęs pažinimo iki studijų. Spauskite telefone arba pasirinkite ekraną iš sąrašo.</p>
+    <div style="display:grid;gap:6px"><p class="label" style="margin:0">Prototipo planas</p><div class="seg" id="planSwitch"><button type="button" data-plan="free">Nemokamas</button><button type="button" data-plan="premium">Premium</button></div></div>
+    <nav id="jump"></nav>
+    <p class="note">Mokyklos, specialistai ir kontaktai pavyzdiniai. DI atsakymai šiame prototipe paruošti iš anksto. Niekas nesiunčiama ir neišsaugoma: perkrovus puslapį, viskas prasideda iš naujo.</p>
+  </aside>
+
+  <div class="phone">
+    <div class="status" aria-hidden="true"><span>9:41</span><span class="icons">
+      <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx="1" fill="currentColor"/><rect x="4.5" y="4" width="3" height="6" rx="1" fill="currentColor"/><rect x="9" y="2" width="3" height="8" rx="1" fill="currentColor"/><rect x="13" y="0" width="3" height="10" rx="1" fill="currentColor"/></svg>
+      <svg width="22" height="11" viewBox="0 0 22 11"><rect x=".5" y=".5" width="19" height="10" rx="3" fill="none" stroke="currentColor"/><rect x="2" y="2" width="14" height="7" rx="1.5" fill="currentColor"/><rect x="20.5" y="3.5" width="1.5" height="4" rx=".7" fill="currentColor"/></svg>
+    </span></div>
+    <div id="app"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>String(s).toLowerCase().replace(/[ąčęėįšųūž]/g,c=>({"ą":"a","č":"c","ę":"e","ė":"e","į":"i","š":"s","ų":"u","ū":"u","ž":"z"}[c]));
+const words=s=>(s.trim().match(/\S+/g)||[]).length;
+
+const ICON={
+  back:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>',
+  grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+  cap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>',
+  people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5.5 6.5-5.5s5.5 2 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.3 0 4 1.6 4.8 4.5"/></svg>',
+  send:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>',
+  chev:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8796AB" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>',
+  cal:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  calT:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  dash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="10" rx="1.5"/><rect x="13" y="3" width="8" height="6" rx="1.5"/><rect x="13" y="11" width="8" height="10" rx="1.5"/><rect x="3" y="15" width="8" height="6" rx="1.5"/></svg>',
+  inbox:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 14h4l2 3h4l2-3h4"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  bell:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
+  lock:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  folder:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  logo:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#F7F9FC"/><rect x="11" y="44" width="40" height="9" rx="1.6" fill="#142C50"/><rect x="46" y="45.6" width="3" height="5.8" rx=".6" fill="#F7F9FC"/><rect x="18" y="35" width="33" height="9" rx="1.6" fill="#A9C7E8"/><rect x="46" y="36.6" width="3" height="5.8" rx=".6" fill="#F7F9FC"/><rect x="25" y="26" width="26" height="9" rx="1.6" fill="#F28A32"/><rect x="46" y="27.6" width="3" height="5.8" rx=".6" fill="#F7F9FC"/><path d="M33.5 19.5h9v4.2q-4.5 2.2-9 0z" fill="#142C50"/><path d="M28 18.5L38 14.6L48 18.5L38 22.4Z" fill="#142C50"/><path d="M38 18.5L45.6 19.4V24" fill="none" stroke="#F28A32" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="45.6" cy="24.6" r="1.3" fill="#F28A32"/></svg>'
+};
+
+/* ---------- streak: degančių knygų krūvelė ---------- */
+function streakIcon(sz,lit){const g=lit?["#142C50","#A9C7E8","#F28A32"]:["#B4C0CF","#D3DBE5","#C7CFD9"];
+ return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 32 32" aria-hidden="true">'+
+ (lit?'<g class="flame'+(lit?" lit":"")+'"><path d="M16 3.5C17.5 7 21.5 8.6 21.5 13a5.5 5.5 0 0 1-11 0c0-2.4 1.3-3.6 2.4-5 .3 1.6 1 2.6 2 3.1-.4-2.8.4-5.4 1.1-7.6z" fill="#F28A32"/><path d="M16 9.5c1 2 3 2.9 3 5.1a3 3 0 0 1-6 0c0-1.3.7-2.1 1.3-2.9.3.9.7 1.3 1.2 1.6-.2-1.5.1-2.7.5-3.8z" fill="#FFC857"/></g>':
+  '<path d="M16 8c1 2.2 3.4 3.2 3.4 6a3.4 3.4 0 0 1-6.8 0c0-1.5.8-2.3 1.5-3.2.2 1 .6 1.6 1.2 1.9-.2-1.7.2-3.3.7-4.7z" fill="none" stroke="#B4C0CF" stroke-width="1.3" stroke-dasharray="2 1.6"/>')+
+ '<rect x="5" y="25" width="22" height="4.5" rx="1" fill="'+g[0]+'"/><rect x="23.5" y="25.9" width="2" height="2.7" rx=".4" fill="#F7F9FC"/>'+
+ '<rect x="7" y="20.5" width="18" height="4.5" rx="1" fill="'+g[1]+'"/><rect x="21.5" y="21.4" width="2" height="2.7" rx=".4" fill="#F7F9FC"/>'+
+ '<rect x="9" y="16" width="14" height="4.5" rx="1" fill="'+g[2]+'"/><rect x="19.5" y="16.9" width="2" height="2.7" rx=".4" fill="#F7F9FC"/></svg>';}
+function dienu(n){return n===1?"diena":(n%10===0||(n%100>=11&&n%100<=19))?"dienų":(n%10===1?"diena":"dienos");}
+/* ---------- mascot: Stepas ---------- */
+function mascot(sz,wave){return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 64 64" aria-hidden="true">'+
+ '<ellipse cx="32" cy="60" rx="15" ry="2.6" fill="rgba(20,44,80,.12)"/>'+
+ '<rect x="15" y="18" width="34" height="38" rx="8" fill="#F28A32"/><rect x="15" y="18" width="7" height="38" rx="3.5" fill="#D9681B"/><rect x="44" y="22" width="3.4" height="30" rx="1.5" fill="#F7F9FC"/>'+
+ '<circle cx="29" cy="34" r="5" fill="#fff"/><circle cx="40" cy="34" r="5" fill="#fff"/><circle cx="30" cy="35" r="2.6" fill="#142C50"/><circle cx="41" cy="35" r="2.6" fill="#142C50"/><circle cx="30.8" cy="34" r=".9" fill="#fff"/><circle cx="41.8" cy="34" r=".9" fill="#fff"/>'+
+ '<circle cx="24.5" cy="42" r="2.2" fill="#F7B48A"/><circle cx="45" cy="42" r="2.2" fill="#F7B48A"/>'+
+ '<path d="M30 44Q34.5 48.5 39 44" fill="none" stroke="#142C50" stroke-width="2.2" stroke-linecap="round"/>'+
+ (wave?'<path d="M49 36L56 27" stroke="#D9681B" stroke-width="3.6" stroke-linecap="round"/><circle cx="56.5" cy="26" r="2.6" fill="#D9681B"/>':'<path d="M49 40L54 46" stroke="#D9681B" stroke-width="3.6" stroke-linecap="round"/>')+
+ '<path d="M14 40L10 46" stroke="#D9681B" stroke-width="3.6" stroke-linecap="round"/>'+
+ '<path d="M26 14.5h12v4.5q-6 2.6-12 0z" fill="#142C50"/><path d="M18 13.5L32 8L46 13.5L32 19Z" fill="#142C50"/>'+
+ '<path d="M32 13.5L42 14.8V20.5" fill="none" stroke="#A9C7E8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="42" cy="21.3" r="1.5" fill="#A9C7E8"/></svg>';}
+/* ---------- data (pavyzdiniai) ---------- */
+const T="Tikslieji mokslai ir IT",V="Verslas ir ekonomika",M="Menai ir kūryba",G="Gamta ir sveikata",SO="Socialiniai mokslai ir kalbos";
+const AREAS=[T,V,M,G,SO];
+const AREA_KW={
+  [T]:["matemat","fizik","informatik","program","kompiuter","robot","technolog","inziner","olimpiad","skaiciav","logik","uzdavin","duomen"],
+  [V]:["versl","ekonom","finans","pardav","mug","bendrov","vadyb","marketing","lja","pinig","investav","start"],
+  [M]:["dail","piest","muzik","groj","dizain","foto","film","vaidin","teatr","sok","kuryb","kuri","rasyt","eiler"],
+  [G]:["biolog","chemij","gamt","medicin","sveikat","gyvun","ekolog","anatom","augal","gydyt"],
+  [SO]:["istorij","kalb","angl","lietuviu","psicholog","savanor","padet","debat","teis","politik","bendrav","mokyt","vok","prancuz"]
+};
+const STR_KW=[["organiz","Organizavimas"],["lyder","Lyderystė"],["vadov","Lyderystė"],["komand","Darbas komandoje"],["matemat","Loginis mąstymas"],["logik","Loginis mąstymas"],["program","Problemų sprendimas"],["uzdavin","Problemų sprendimas"],["kuryb","Kūrybiškumas"],["piest","Kūrybiškumas"],["dizain","Kūrybiškumas"],["savanor","Empatija"],["padet","Pagalba kitiems"],["paaiskin","Mokėjimas paaiškinti"],["debat","Viešasis kalbėjimas"],["pristat","Viešasis kalbėjimas"],["pardav","Bendravimas"],["bendrav","Bendravimas"],["kruops","Kruopštumas"],["sport","Atkaklumas"],["krepsin","Atkaklumas"]];
+const SAMPLE="Man geriausiai sekasi matematika ir ekonomikos pamokos. Pernai su draugais įkūrėme mokinių bendrovę ir mokyklos mugėje pardavinėjome savo gamintus atvirukus, aš rūpinausi skaičiavimais ir pardavimais. Mėgstu organizuoti renginius, taip pat padėjau surengti klasės išvyką. Laisvalaikiu žaidžiu krepšinį komandoje. Draugai dažnai prašo paaiškinti matematikos uždavinius. Anglų kalba sekasi vidutiniškai, o dailė man nelabai patinka.";
+
+const SCHOOLS=[
+ {id:"s1",name:"Pavyzdinė gimnazija Nr. 1",city:"Vilnius",spec:[
+   {name:"Rasa Kazlauskienė",role:"Karjeros specialistė",hours:"Antradieniais ir ketvirtadieniais 13:00–15:00",room:"112 kab.",email:"karjera@gimnazija1.pavyzdys.lt",phone:"+370 600 00001"},
+   {name:"Tomas Jankauskas",role:"Psichologas, karjeros konsultantas",hours:"Pirmadieniais 12:00–14:00",room:"204 kab.",email:"psichologas@gimnazija1.pavyzdys.lt",phone:"+370 600 00002"}]},
+ {id:"s2",name:"Pavyzdinė gimnazija Nr. 2",city:"Kaunas",spec:[
+   {name:"Jurgita Petrauskaitė",role:"Karjeros specialistė",hours:"Trečiadieniais 11:00–14:00",room:"Biblioteka",email:"karjera@gimnazija2.pavyzdys.lt",phone:"+370 600 00003"}]},
+ {id:"s3",name:"Pavyzdinė progimnazija",city:"Klaipėda",spec:[
+   {name:"Lina Stankevičienė",role:"Karjeros specialistė",hours:"Penktadieniais 10:00–12:00",room:"8 kab.",email:"karjera@progimnazija.pavyzdys.lt",phone:"+370 600 00004"}]},
+ {id:"s4",name:"Pavyzdinis profesinio mokymo centras",city:"Šiauliai",spec:[]}
+];
+const INST={
+ VU:{name:"Vilniaus universitetas",city:"Vilnius",type:"Valstybinis universitetas",desc:"Seniausias Lietuvos universitetas, įkurtas 1579 m. Siūlo plačiausią studijų pasirinkimą: nuo gamtos ir tiksliųjų mokslų iki ekonomikos, teisės ir humanitarinių mokslų."},
+ KTU:{name:"Kauno technologijos universitetas",city:"Kaunas",type:"Valstybinis universitetas",desc:"Technologijų, inžinerijos ir informatikos universitetas Kaune, glaudžiai bendradarbiaujantis su verslu."},
+ VT:{name:"VILNIUS TECH",city:"Vilnius",type:"Valstybinis universitetas",desc:"Vilniaus Gedimino technikos universitetas. Inžinerija, statyba, transportas, informatika ir verslo vadyba."},
+ ISM:{name:"ISM Vadybos ir ekonomikos universitetas",city:"Vilnius",type:"Privatus universitetas",desc:"Privatus universitetas Vilniuje, besispecializuojantis vadybos, ekonomikos ir finansų studijose."},
+ VDA:{name:"Vilniaus dailės akademija",city:"Vilnius",type:"Valstybinė akademija",desc:"Dailės, dizaino, architektūros ir medijų studijos Vilniuje, Kaune, Klaipėdoje ir Telšiuose."},
+ LSMU:{name:"Lietuvos sveikatos mokslų universitetas",city:"Kaunas",type:"Valstybinis universitetas",desc:"Medicinos, odontologijos, farmacijos, slaugos ir veterinarijos studijos Kaune."},
+ VDU:{name:"Vytauto Didžiojo universitetas",city:"Kaunas",type:"Valstybinis universitetas",desc:"Universitetas Kaune, žinomas „artes liberales“ studijomis: galima derinti skirtingų sričių dalykus."}
+};
+const CC_PEOPLE=k=>[
+ {role:"Karjeros konsultantas",what:"Padeda pasirinkti studijų programą",email:"karjera@"+k.toLowerCase()+".pavyzdys.lt",phone:"+370 600 1"+String(Object.keys(INST).indexOf(k)).padStart(4,"0"),hours:"I–V 10:00–16:00"},
+ {role:"Priėmimo skyrius",what:"Atsako į klausimus apie stojimą",email:"priemimas@"+k.toLowerCase()+".pavyzdys.lt",phone:"+370 600 2"+String(Object.keys(INST).indexOf(k)).padStart(4,"0"),hours:"I–IV 9:00–17:00, V 9:00–15:00"}];
+const ACCOM=k=>{const big=INST[k].city==="Vilnius";return [
+ {t:"Universiteto bendrabutis",d:"Vietos pirmakursiams skiriamos pagal prašymus. Prašymą reikia pateikti iškart įstojus.",price:big?"apie 100–200 € / mėn.":"apie 80–170 € / mėn.",dist:"10–25 min. iki paskaitų"},
+ {t:"Kambario nuoma mieste",d:"Kambarys bute su kitais studentais. Patogu ieškoti kartu su kursiokais.",price:big?"apie 300–450 € / mėn.":"apie 220–350 € / mėn.",dist:"Priklauso nuo rajono"},
+ {t:"Studentų rezidencijos",d:"Privatūs studentų namai su bendromis erdvėmis ir sutartimi mokslo metams.",price:big?"apie 450–650 € / mėn.":"apie 350–500 € / mėn.",dist:"Dažniausiai netoli centro"}];};
+const MONTHS=["sausis","vasaris","kovas","balandis","gegužė","birželis","liepa","rugpjūtis","rugsėjis","spalis","lapkritis","gruodis"];
+const WD=["Sk","Pr","An","Tr","Kt","Pn","Št"];
+const EVTYPES={stojimas:"Stojimas",atviros:"Atviros durys",egzaminai:"Egzaminai",veiklos:"Veiklos",mokykla:"Mokykla",mano:"Mano"};
+const BASE_EVENTS=[
+ {d:"2026-11-27",t:"Vilniaus universiteto atvirų durų diena",k:"atviros"},
+ {d:"2026-12-04",t:"Robotikos varžybų registracijos pabaiga",k:"veiklos"},
+ {d:"2027-01-14",t:"Matematikos olimpiada, mokyklos etapas",k:"veiklos"},
+ {d:"2027-02-11",t:"KTU atvirų durų diena",k:"atviros"},
+ {d:"2027-03-10",t:"Studijų mugė",k:"atviros"},
+ {d:"2027-04-15",t:"Vasaros stovyklų registracijos pabaiga",k:"veiklos"},
+ {d:"2027-05-20",t:"Brandos egzaminų sesijos pradžia",k:"egzaminai"},
+ {d:"2027-06-01",t:"Bendrojo priėmimo prašymų teikimo pradžia",k:"stojimas"},
+ {d:"2027-07-20",t:"Pagrindinio priėmimo etapo pabaiga",k:"stojimas"}];
+const TASKS=[
+ {id:"t1",q:"Prisimink situaciją, kai padėjai kitam žmogui. Kas tau tada patiko labiausiai?",type:"text"},
+ {id:"t2",q:"Kurios pamokos šią savaitę laukei labiausiai?",type:"choice",opts:["Matematikos","Lietuvių ar užsienio kalbos","Gamtos mokslų","Menų ar technologijų","Jokios ypatingai"]},
+ {id:"t3",q:"Užrašyk vieną dalyką, kurį norėtum išmokti per šiuos metus.",type:"text"},
+ {id:"t4",q:"Kas tave labiau įkvepia?",type:"choice",opts:["Žmonės, kurie kuria","Žmonės, kurie padeda","Žmonės, kurie atranda","Žmonės, kurie vadovauja"]},
+ {id:"t5",q:"Kokią veiklą darytum net tada, jei už ją niekas negirtų?",type:"text"},
+ {id:"t6",q:"Kaip mieliau sprendi sudėtingą užduotį?",type:"choice",opts:["Vienas, ramiai","Su draugu","Komandoje","Paklausiu suaugusiojo"]}];
+const FREE_TASKS=3, TASK_PTS=20, ABOUT_PTS=40;
+const BADGES=[["1","Pirmas žingsnis",()=>S.aboutDone],["3","Smalsuolis",()=>S.tasksDone.length>=3],["100","Savęs tyrinėtojas",()=>S.points>=100],["✓","Išbandžiau veiklą",()=>S.tried.length>0]];
+const SPECS=[
+ {id:"sp1",name:"Rasa Kazlauskienė",role:"Karjeros specialistė",org:"Pavyzdinė gimnazija Nr. 1",type:"Mokykla",school:"s1",areas:AREAS.slice(),about:"Padeda rinktis dalykus 11–12 klasei, ruoštis stojimui ir rasti tinkamų veiklų.",email:"karjera@gimnazija1.pavyzdys.lt",phone:"+370 600 00001",hours:"An ir Kt 13:00–15:00, 112 kab.",consult:true},
+ {id:"sp2",name:"Tomas Jankauskas",role:"Psichologas, karjeros konsultantas",org:"Pavyzdinė gimnazija Nr. 1",type:"Mokykla",school:"s1",areas:[SO,G],about:"Kalbasi su mokiniais apie savęs pažinimą, stiprybes ir abejones renkantis kryptį.",email:"psichologas@gimnazija1.pavyzdys.lt",phone:"+370 600 00002",hours:"Pr 12:00–14:00, 204 kab.",consult:true},
+ {id:"sp3",name:"Karjeros konsultantas",role:"Ekonomikos ir verslo studijos",org:"Vilniaus universitetas",type:"Universitetas",areas:[V,T],about:"Konsultuoja apie ekonomikos, finansų ir matematikos studijų pasirinkimą.",email:"karjera@vu.pavyzdys.lt",phone:"+370 600 10000",hours:"I–V 10:00–16:00",consult:true},
+ {id:"sp4",name:"Priėmimo konsultantas",role:"Technologijų ir IT studijos",org:"Kauno technologijos universitetas",type:"Universitetas",areas:[T],about:"Atsako į klausimus apie informatikos, inžinerijos ir matematikos programas.",email:"priemimas@ktu.pavyzdys.lt",phone:"+370 600 10001",hours:"I–IV 9:00–17:00",consult:false},
+ {id:"sp5",name:"Karjeros konsultantas",role:"Sveikatos mokslų studijos",org:"Lietuvos sveikatos mokslų universitetas",type:"Universitetas",areas:[G],about:"Padeda suprasti medicinos, slaugos ir farmacijos studijų reikalavimus.",email:"karjera@lsmu.pavyzdys.lt",phone:"+370 600 10005",hours:"I–V 9:00–15:00",consult:true},
+ {id:"sp6",name:"Studijų konsultantas",role:"Kūrybinės studijos",org:"Vilniaus dailės akademija",type:"Universitetas",areas:[M],about:"Pataria apie dizaino ir menų studijas bei stojamųjų darbų rengimą.",email:"studijos@vda.pavyzdys.lt",phone:"+370 600 10004",hours:"I–V 10:00–15:00",consult:false},
+ {id:"sp7",name:"Karjeros centras",role:"Profesinio bakalauro studijos",org:"Vilniaus kolegija",type:"Kolegija",areas:[V,T,G],about:"Pristato praktinio pobūdžio studijas su ilgesnėmis praktikomis įmonėse.",email:"karjera@viko.pavyzdys.lt",phone:"+370 600 20001",hours:"I–V 9:00–16:00",consult:true},
+ {id:"sp8",name:"Studijų konsultantas",role:"Technologijų ir verslo programos",org:"Kauno kolegija",type:"Kolegija",areas:[T,V,M],about:"Padeda palyginti kolegijos ir universiteto studijas.",email:"studijos@kauko.pavyzdys.lt",phone:"+370 600 20002",hours:"I–IV 9:00–16:00",consult:false}];
+const NOTIFS=[
+ {t:"Nauja programa: jaunųjų ekonomistų savaitgalis",d:"Tinka tavo sričiai: verslas ir ekonomika · 11–12 kl.",when:"Šiandien",area:V},
+ {t:"Atsirado laisvų vietų robotikos būrelyje",d:"Tavo mokykloje · antradieniais",when:"Vakar",area:T},
+ {t:"Savanorystė gyvūnų prieglaudoje",d:"Tavo mieste · nuo 14 metų",when:"Prieš 3 d.",area:G},
+ {t:"Kūrybinių darbų konkursas mokiniams",d:"Registracija iki gruodžio 10 d.",when:"Prieš 5 d.",area:M},
+ {t:"Debatų turnyras",d:"Registracija atvira 10–12 kl.",when:"Prieš savaitę",area:SO}];
+const SLOT_DATE={"Antr. 13:00":"2026-11-17","Antr. 13:30":"2026-11-17","Ketv. 14:00":"2026-11-19","Ketv. 14:30":"2026-11-19"};
+const CC=k=>({unit:"Karjeros centras",email:"karjera@"+k.toLowerCase()+".pavyzdys.lt",phone:"+370 600 1"+String(Object.keys(INST).indexOf(k)).padStart(4,"0"),hours:"I–V 10:00–16:00"});
+const STUDIES=[
+ {id:"vu-ek",inst:"VU",prog:"Ekonomika",areas:[V],about:"Rinkos, finansai, duomenų analizė ir ekonomikos politika."},
+ {id:"vu-fdm",inst:"VU",prog:"Finansų ir draudimo matematika",areas:[T,V],about:"Matematika, taikoma finansams, rizikai ir draudimui."},
+ {id:"vu-mat",inst:"VU",prog:"Matematika",areas:[T],about:"Gilūs matematikos pagrindai ir jų taikymas."},
+ {id:"ktu-tm",inst:"KTU",prog:"Taikomoji matematika",areas:[T,V],about:"Matematiniai modeliai, statistika ir programavimas."},
+ {id:"ktu-ps",inst:"KTU",prog:"Programų sistemos",areas:[T],about:"Programinės įrangos kūrimas ir projektavimas."},
+ {id:"vt-fi",inst:"VT",prog:"Finansų inžinerija",areas:[V,T],about:"Finansų rinkos, investicijos ir kiekybiniai metodai."},
+ {id:"ism-ep",inst:"ISM",prog:"Ekonomika ir politika",areas:[V,SO],about:"Ekonomika kartu su viešąja politika ir sprendimų priėmimu."},
+ {id:"vda-gd",inst:"VDA",prog:"Grafinis dizainas",areas:[M],about:"Vizualinė komunikacija, tipografija ir prekės ženklai."},
+ {id:"lsmu-med",inst:"LSMU",prog:"Medicina",areas:[G],about:"Gydytojo profesijos pagrindai ir klinikinė praktika."},
+ {id:"vu-mb",inst:"VU",prog:"Molekulinė biologija",areas:[G,T],about:"Ląstelės, genai ir laboratoriniai tyrimai."},
+ {id:"vu-psi",inst:"VU",prog:"Psichologija",areas:[SO,G],about:"Žmogaus elgesys, raida ir pagalba kitiems."},
+ {id:"vdu-pol",inst:"VDU",prog:"Politologija",areas:[SO],about:"Valstybės, politikos ir tarptautinių santykių analizė."}
+];
+const ACTS=[
+ {id:"seseliavimas",name:"Profesijų šešėliavimas",areas:AREAS.slice(),who:"10–12 klasių mokiniams",where:"Pasirinktoje darbovietėje",when:"Visus metus, susitarus",how:"Per mokyklos karjeros specialistą",about:"Vieną dieną praleidi su pasirinktos profesijos specialistu ir pamatai, kaip atrodo jo darbas."},
+ {id:"lja",name:"LJA mokinių programos",areas:[V],who:"Mokiniams, besidomintiems verslumu",where:"Mokykloje",when:"Mokslo metų eigoje",how:"Per mokyklą",about:"Verslumo veiklos, kuriose mokiniai išbando idėjų kūrimą ir darbą komandoje."},
+ {id:"fh",name:"Future Heroes",areas:[SO,V,T],who:"Mokiniams",where:"Bus patikslinta",when:"Bus patikslinta",how:"Organizatorių svetainėje",about:"Programa mokiniams, padedanti išbandyti save. Tikslią informaciją komanda surinks su organizatoriais."},
+ {id:"robotika",name:"Robotikos būrelis",areas:[T],who:"10–11 klasių mokiniams",where:"Mokykloje",when:"Antradieniais po pamokų",how:"Pas būrelio vadovą",about:"Konstruoji ir programuoji robotus, ruošiesi varžyboms."},
+ {id:"olimpiada",name:"Matematikos olimpiada",areas:[T],who:"10–12 klasių mokiniams",where:"Mokykloje, vėliau mieste",when:"Žiemą",how:"Pas matematikos mokytoją",about:"Spręsk sudėtingesnius uždavinius ir pažiūrėk, ar tave traukia gilesnė matematika."},
+ {id:"video",name:"Mokyklos video projektas",areas:[M],who:"Visiems mokiniams",where:"Mokykloje",when:"Pavasarį",how:"Pas projekto koordinatorių",about:"Kartu su kitais kuri trumpą filmą apie mokyklos gyvenimą."},
+ {id:"savanoryste",name:"Savanorystė bendruomenėje",areas:[SO,G],who:"Nuo 14 metų",where:"Tavo mieste",when:"Pagal galimybes",how:"Per savanorystės organizacijas",about:"Padedi gyvūnų prieglaudai, senjorams ar aplinkosaugos akcijose."}
+];
+const STAGES=["Pažinti save","Išbandyti veiklas","Apmąstyti patirtį","Tyrinėti studijas","Pasirinkti ir pasiruošti","Persikelti ir įsikurti"];
+
+/* ---------- state ---------- */
+function zero(){return Object.fromEntries(AREAS.map(a=>[a,0]));}
+function fresh(){return {screen:"welcome",params:{},name:"",email:"",schoolId:"",schoolQuery:"",grade:"10",privacy:false,
+  about:"",aboutDone:false,score:zero(),strengths:[],strengthState:{},chatAreas:[],
+  aiConsent:null,chat:[],typing:false,
+  filter:"Tinka tau",sfilter:"Tinka tau",saved:[],savedStudies:[],tried:[],reflections:{},booking:null,
+  role:"student",share:false,stab:"lt",sview:"prog",efilter:"Visi",reminders:{},schoolEvents:[],myMsgs:[],
+  cons:[{id:"c1",student:"Gabija K.",grade:"12",slot:"Antr. 13:00",date:"2026-11-17",topic:"Stojimas į mediciną",status:"Patvirtinta"},{id:"c2",student:"Matas P.",grade:"11",slot:"Ketv. 14:00",date:"2026-11-19",topic:"IT studijų palyginimas",status:"Laukia"}],
+  threads:[{id:"t1",student:"Lukas S.",grade:"10",msgs:[{me:false,t:"Laba diena, kokius dalykus rinktis 11 klasėje, jei domina ekonomika?",time:"10:24"}],unread:true},{id:"t2",student:"Gabija K.",grade:"12",msgs:[{me:false,t:"Ar galėtume konsultacijoje aptarti ir slaugos studijas?",time:"Vakar"},{me:true,t:"Žinoma, pasiruoškite klausimų sąrašą.",time:"Vakar"}],unread:false}],
+  pupils:[{name:"Gabija K.",grade:"12",areas:[G,SO],strengths:["Empatija","Kruopštumas"],studies:["lsmu-med","vu-psi"],acts:["savanoryste"],active:"Šiandien"},{name:"Matas P.",grade:"11",areas:[T],strengths:["Loginis mąstymas"],studies:["ktu-ps","vu-mat"],acts:["robotika"],active:"Prieš 2 d."},{name:"Lukas S.",grade:"10",areas:[V],strengths:["Iniciatyvumas"],studies:[],acts:["lja"],active:"Prieš 5 d."}],
+  specHours:"Antradieniais ir ketvirtadieniais 13:00–15:00",
+  points:0,aboutPts:false,tasksDone:[],taskAnswers:{},reviewSeen:false,plan:"free",notifOn:true,notifFreq:"Kartą per savaitę",notifSeen:false,
+  portfolio:[{id:"p1",title:"Mokinių mokomoji bendrovė (LJA)",type:"Programa",date:"2026-05",desc:"Su komanda kūrėme ir pardavinėjome atvirukus mokyklos mugėje. Buvau atsakinga už skaičiavimus.",img:null,inCV:true}],
+  draft:null,specType:"Visi",specMine:true,specQuery:"",tour:null,tourDone:false,streak:0,doneToday:false};}
+let S=fresh();
+
+function go(screen,params){S.screen=screen;S.params=params||{};render();const c=$("#app .content");if(c)c.scrollTop=0;}
+function toast(t){const old=$(".toast");if(old)old.remove();const d=document.createElement("div");d.className="toast";d.setAttribute("role","status");d.textContent=t;$("#app").appendChild(d);setTimeout(()=>d.remove(),3000);}
+function sheet(html){closeSheet();const s=document.createElement("div");s.className="scrim";s.innerHTML='<div class="sheet" role="dialog" aria-modal="true">'+html+'</div>';s.addEventListener("click",e=>{if(e.target===s)closeSheet();});$("#app").appendChild(s);const b=s.querySelector("textarea,button");if(b)b.focus();}
+function closeSheet(){const s=$(".scrim");if(s)s.remove();}
+function nm(){return S.name.trim()||"Mokiny";}
+function school(){return SCHOOLS.find(x=>x.id===S.schoolId);}
+function ranked(sc){return AREAS.map(a=>[a,sc[a]]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);}
+function myAreas(){const r=ranked(S.score).slice(0,2).map(x=>x[0]);return r.length?r:S.chatAreas;}
+function detectAreas(text){const n=norm(text);const sc=zero();AREAS.forEach(a=>AREA_KW[a].forEach(k=>{const m=n.match(new RegExp(k,"g"));if(m)sc[a]+=m.length;}));return sc;}
+function detectStrengths(text){const n=norm(text);const out=[];STR_KW.forEach(([k,s])=>{if(n.includes(k)&&!out.includes(s))out.push(s);});return out.slice(0,6);}
+function studiesFor(areas){if(!areas.length)return STUDIES.slice(0,4);return STUDIES.map(s=>[s,s.areas.filter(a=>areas.includes(a)).length+(s.areas.length&&areas.includes(s.areas[0])?.5:0)]).filter(x=>x[1]>=1).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);}
+function actsFor(areas){if(!areas.length)return ACTS.slice(0,3);return ACTS.filter(a=>a.areas.some(x=>areas.includes(x)));}
+const actById=id=>ACTS.find(a=>a.id===id), studyById=id=>STUDIES.find(s=>s.id===id);
+const lc=a=>a.charAt(0).toLowerCase()+a.slice(1);
+
+/* ---------- chrome ---------- */
+const TABS=[["home","Pradžia",ICON.home],["chat","Pokalbis",ICON.chat],["acts","Veiklos",ICON.grid],["studies","Studijos",ICON.cap],["specs","Specialistai",ICON.people]];
+const SPEC_TABS=[["sHome","Apžvalga",ICON.dash],["sCons","Konsultacijos",ICON.clock],["sMsgs","Žinutės",ICON.inbox],["sPupils","Mokiniai",ICON.people],["calendar","Kalendorius",ICON.calT]];
+const TAB_OF={home:"home",about:"home",results:"home",profile:"home",calendar:"home",progress:"home",task:"home",review:"home",notifs:"home",folio:"home",folioAdd:"home",cv:"home",plans:"home",specs:"specs",spec:"specs",chat:"chat",acts:"acts",act:"acts",reflect:"acts",studies:"studies",study:"studies",inst:"studies",contacts:"contacts",
+ sHome:"sHome",sProfile:"sHome",sCons:"sCons",sMsgs:"sMsgs",sThread:"sMsgs",sPupils:"sPupils",sPupil:"sPupils"};
+function tabbar(){let cur=TAB_OF[S.screen];const tabs=S.role==="spec"?SPEC_TABS:TABS;if(S.role==="spec"&&S.screen==="calendar")cur="calendar";return '<nav class="tabbar">'+tabs.map(t=>'<button type="button" data-go="'+t[0]+'" class="t-'+t[0]+(cur===t[0]?" on":"")+'"'+(cur===t[0]?' aria-current="page"':'')+'>'+t[2]+'<span>'+t[1]+'</span></button>').join("")+'</nav>';}
+function header(title,backTo,extra){return '<header class="top">'+(backTo?'<button class="back" type="button" data-go="'+backTo+'" aria-label="Atgal">'+ICON.back+'</button>':'')+'<h2>'+title+'</h2>'+(extra||'')+'</header>';}
+const ex='<span class="example">Pavyzdiniai duomenys</span>';
+
+function specCard(sp,sch){return '<div class="card"><div class="person"><div class="avatar">'+sp.name.split(" ").map(w=>w[0]).join("")+'</div><div style="display:grid;gap:6px"><div><h3>'+sp.name+'</h3><p class="muted small" style="margin:0">'+sp.role+(sch?" · "+sch.name:"")+'</p></div>'+
+ '<div class="kv"><span>Konsultacijos</span>'+sp.hours+', '+sp.room+'</div><div class="kv"><span>El. paštas</span>'+sp.email+'</div><div class="kv"><span>Telefonas</span>'+sp.phone+'</div></div></div>'+
+ '<div class="row"><button class="btn ghost" type="button" data-act="write" data-to="'+esc(sp.name)+'">Parašyti</button><button class="btn" type="button" data-act="book" data-to="'+esc(sp.name)+'">Registruotis</button></div></div>';}
+function ccLine(k){const c=CC(k);return '<div class="contact"><b>'+INST[k].name+' · '+c.unit+'</b><br>'+c.email+' · '+c.phone+'<br>'+c.hours+'</div>';}
+
+/* ---------- views ---------- */
+const VW={};
+VW.welcome=()=>'<div class="welcome"><div><div class="brand">'+ICON.logo+' Future Step</div>'+
+ '<div class="hello" style="margin-top:34px;grid-template-columns:72px 1fr"><span>'+mascot(72,true)+'</span><div class="bubble"><p class="small"><b>Labas! Aš Stepas.</b> Padėsiu tau atrasti, kas tau sekasi, ir rasti kelią į studijas.</p></div></div>'+
+ '<div style="margin-top:22px"><h1>Tavo kelias nuo „kas man sekasi?“ iki studijų</h1><p class="muted">Asmeninis DI pagalbininkas mokiniams nuo 10 klasės. Padeda pažinti save, rasti veiklų, studijų ir žmonių, su kuriais pasitarti. Sprendimus priimi tu.</p>'+
+ '<div class="steps-mini"><div><span>1</span>Aprašyk, kas tau geriausiai sekasi</div><div><span>2</span>Gauk tinkamų veiklų ir studijų pasiūlymų</div><div><span>3</span>Pasitark su savo mokyklos karjeros specialistu</div></div></div></div>'+
+ '<div style="display:grid;gap:8px"><button class="btn" type="button" data-go="register">Sukurti paskyrą</button><button class="btn text" type="button" data-act="login">Jau turiu paskyrą</button><button class="btn text" type="button" data-act="specLogin" style="color:var(--muted);font-weight:500">Esu mokyklos karjeros specialistas</button></div></div>';
+
+VW.register=()=>header("Paskyros kūrimas","welcome")+'<div class="content">'+
+ '<p class="muted small" style="margin:0">1 žingsnis iš 2</p>'+
+ '<label class="field" for="f-name">Vardas arba slapyvardis<input id="f-name" value="'+esc(S.name)+'" autocomplete="nickname" placeholder="pvz., Ieva"></label>'+
+ '<label class="field" for="f-email">El. paštas<input id="f-email" type="email" value="'+esc(S.email)+'" autocomplete="email" placeholder="vardas@pastas.lt"></label>'+
+ '<label class="field" for="f-pass">Slaptažodis<input id="f-pass" type="password" autocomplete="new-password" placeholder="Bent 8 simboliai"></label>'+
+ '<label class="field" for="f-birth">Gimimo metai<select id="f-birth">'+[2007,2008,2009,2010,2011].map(y=>'<option'+(y===2010?" selected":"")+'>'+y+'</option>').join("")+'</select></label>'+
+ '<p class="muted small" style="margin:0">Registruotis gali mokiniai nuo 14 metų.</p>'+
+ '<div style="margin-top:auto"><button class="btn" type="button" data-act="reg1">Toliau</button></div></div>';
+
+function schoolPicker(){
+ const sch=school();
+ if(sch) return '<div class="field"><span>Mokykla ar įstaiga</span><div class="picked"><span>'+sch.name+', '+sch.city+'</span><button type="button" data-act="unpick">Keisti</button></div></div>';
+ const q=norm(S.schoolQuery);const list=SCHOOLS.filter(s=>!q||norm(s.name+" "+s.city).includes(q));
+ return '<div class="field"><label for="f-school">Mokykla ar įstaiga, kurioje mokaisi</label><input id="f-school" value="'+esc(S.schoolQuery)+'" placeholder="Pradėk rašyti pavadinimą ar miestą" autocomplete="off">'+
+  '<div class="search-list" id="schoolList">'+(list.length?list.map(s=>'<button type="button" data-school="'+s.id+'">'+s.name+' <span class="muted">· '+s.city+'</span></button>').join(""):'<button type="button" disabled>Nerasta. Patikrink pavadinimą.</button>')+'</div></div>';
+}
+VW.setup=()=>header("Apie tave","register")+'<div class="content">'+
+ '<p class="muted small" style="margin:0">2 žingsnis iš 2</p>'+schoolPicker()+
+ '<p class="muted small" style="margin:-4px 0 0">Pagal mokyklą parodysime jos karjeros specialistus.</p>'+
+ '<div class="field"><span>Klasė</span><div class="seg" role="radiogroup" aria-label="Klasė">'+["10","11","12"].map(g=>'<button type="button" role="radio" aria-checked="'+(S.grade===g)+'" class="'+(S.grade===g?"on":"")+'" data-grade="'+g+'">'+g+'</button>').join("")+'</div></div>'+
+ '<label class="check" for="f-priv"><input id="f-priv" type="checkbox"'+(S.privacy?" checked":"")+'><span>Susipažinau su <a href="#" class="link" data-act="policy">privatumo politika</a>.</span></label>'+
+ '<div style="margin-top:auto"><button class="btn" type="button" data-act="reg2">Pradėti</button></div></div>';
+
+VW.home=()=>{
+ const sch=school();
+ const st=[S.aboutDone?"done":"now", S.tried.length?"done":(S.aboutDone?"now":""), Object.keys(S.reflections).length?"done":(S.tried.length?"now":""), S.savedStudies.length?"done":(S.aboutDone?"now":"")];
+ let next;
+ if(!S.aboutDone) next=["Aprašyk, kas tau geriausiai sekasi","Iki 100 žodžių apie pamokas, būrelius ir kitas veiklas. Iš to DI pasiūlys sritis.","Rašyti aprašymą","about"];
+ else if(!S.savedStudies.length) next=["Pažiūrėk tau tinkančias studijas","Atrinkome "+studiesFor(myAreas()).length+" programas pagal tavo sritis.","Žiūrėti studijas","studies"];
+ else next=["Pasitark su karjeros specialistu",(sch&&sch.spec[0]?sch.spec[0].name+" padės palyginti pasirinkimus.":"Rask karjeros specialistą skiltyje Specialistai."),"Atidaryti specialistus","specs"];
+ const up=events().filter(e=>e.d>="2026-11-15").slice(0,2);
+ return header("Labas, "+esc(nm()),null,'<button class="streak'+(S.doneToday?" lit":"")+'" type="button" data-act="streakInfo" aria-label="Serija: '+S.streak+' '+dienu(S.streak)+(S.doneToday?", šiandien atlikta":", šiandien dar neatlikta")+'">'+streakIcon(30,S.doneToday)+'<span>'+S.streak+'</span></button><button class="back" type="button" data-go="calendar" aria-label="Kalendorius" style="margin:0">'+ICON.cal+'</button><button class="back'+(S.notifOn&&!S.notifSeen?" dot-badge":"")+'" type="button" data-go="notifs" aria-label="Pranešimai" style="margin:0">'+ICON.bell+'</button><button class="avatar-btn" type="button" data-go="profile" aria-label="Profilis">'+esc(nm().charAt(0).toUpperCase())+'</button>')+'<div class="content">'+
+ '<p class="muted small" style="margin:-6px 0 0">'+esc(S.grade)+' klasė'+(sch?" · "+sch.name:"")+'</p>'+
+ '<div class="hello"><span>'+mascot(64,true)+'</span><div class="bubble"><p class="kicker" style="color:#D9681B">Stepas siūlo</p><p style="font-weight:600">'+next[0]+'</p><p class="muted small">'+next[1]+'</p><button class="btn" type="button" data-go="'+next[3]+'">'+next[2]+'</button></div></div>'+
+ '<div class="hubs">'+
+ '<button class="hub me" id="hub-me" type="button" data-go="progress"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span><span><b>Pažink save</b><small>Užduotys ir taškai</small></span><span class="cnt">'+S.points+' tšk.</span></button>'+
+ '<button class="hub ac" id="hub-act" type="button" data-go="acts"><span class="ic">'+ICON.grid+'</span><span><b>Veiklos</b><small>Išbandyk save praktiškai</small></span><span class="cnt">'+actsFor(myAreas()).length+' tau</span></button>'+
+ '<button class="hub st" id="hub-stu" type="button" data-act="openStudiesTop"><span class="ic">'+ICON.cap+'</span><span><b>Studijos</b><small>Surikiuotos pagal tave</small></span><span class="cnt">'+(rankStudies().length||STUDIES.length)+' progr.</span></button>'+
+ '</div>'+
+ taskCard()+
+ '<button class="card" type="button" data-go="folio" style="text-align:left;cursor:pointer;grid-template-columns:auto 1fr auto;align-items:center"><span style="color:var(--primary)">'+ICON.folder+'</span><span><b style="display:block">Patirties aplankas</b><span class="muted small">'+S.portfolio.length+' įraš'+(S.portfolio.length===1?"as":"ai")+' · pažymėjimai ir CV</span></span>'+ICON.chev+'</button>'+
+ (S.booking?'<div class="card"><p class="label" style="margin:0">Konsultacija</p><h3>'+S.booking.slot+'</h3><p class="muted small" style="margin:0">'+S.booking.to+' · '+bookingStatus()+'</p></div>':'')+
+ '<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><h3 style="flex:none">Artimiausios datos</h3><button class="btn text" type="button" data-go="calendar" style="flex:none;width:auto;padding:0">Kalendorius</button></div>'+up.map(evRow).join("")+'</div>'+
+ '<div class="card"><h3>Tavo kelias</h3><div class="journey">'+STAGES.map((s,k)=>{
+   const cls=k<4?(st[k]||""):"locked";
+   const pill=cls==="done"?'<span class="pill ok">Atlikta</span>':cls==="now"?'<span class="pill now">Dabar</span>':k>=4?'<span class="pill">Netrukus</span>':'<span class="pill">Laukia</span>';
+   return '<div class="jstep '+cls+'"><span class="dot">'+(cls==="done"?"✓":k+1)+'</span><span>'+s+'</span>'+pill+'</div>';}).join("")+'</div></div>'+
+ '<div class="card"><h3>Išsaugota</h3>'+((S.saved.length||S.savedStudies.length)?
+   S.savedStudies.map(id=>{const s=studyById(id);return '<button class="act" type="button" data-go="study" data-id="'+id+'"><span class="t">'+s.prog+'</span><span class="muted small">'+INST[s.inst].name+'</span></button>';}).join("")+
+   S.saved.map(id=>{const a=actById(id);return '<button class="act" type="button" data-go="act" data-id="'+id+'"><span class="t">'+a.name+'</span><span class="muted small">Veikla · '+a.when+'</span></button>';}).join("")
+   :'<p class="empty">Čia matysi išsaugotas studijas ir veiklas.</p>')+'</div>'+
+ '</div>'+tabbar();};
+
+VW.about=()=>{const w=words(S.about);const cls=w>100?"over":(w>=1?"ok":"");
+ return header("Apie mane","home")+'<div class="content">'+
+ '<h3 style="margin:0;font-size:1.1rem;font-weight:600">Kas tau gyvenime geriausiai sekasi?</h3>'+
+ '<p class="muted small" style="margin:0">Parašyk iki 100 žodžių, gali ir visai trumpai. Paminėk ir pamokas, ir veiklą po pamokų. Nėra teisingų ar neteisingų atsakymų.</p>'+
+ '<ul class="prompts"><li>Kokios pamokos sekasi ir patinka?</li><li>Ką veiki po pamokų: būreliai, sportas, savanorystė?</li><li>Ko kiti dažnai tavęs prašo?</li><li>Kuo didžiuojiesi?</li></ul>'+
+ '<label class="field" for="f-about"><span style="position:absolute;left:-9999px">Aprašymas</span><textarea id="f-about" rows="9" placeholder="Pvz.: Man geriausiai sekasi…">'+esc(S.about)+'</textarea></label>'+
+ '<div class="wc '+cls+'" id="wc"><span id="wcMsg">'+wcMsg(w)+'</span><b id="wcN">'+w+' / 100</b></div>'+
+ '<button class="btn text" type="button" data-act="sample" style="justify-self:start;padding:0">Įkelti pavyzdinį aprašymą</button>'+
+ '<div style="margin-top:auto"><button class="btn" id="analyze" type="button" data-act="analyze"'+(w>=1&&w<=100?"":" disabled")+'>Analizuoti</button></div>'+
+ '</div>'+tabbar();};
+function wcMsg(w){return w<1?"Parašyk bent kelis žodžius":(w>100?"Sutrumpink iki 100 žodžių":(w<15?"Galima analizuoti. Kuo daugiau parašysi, tuo tikslesni pasiūlymai":"Puiku, galima analizuoti"));}
+
+VW.results=()=>{
+ const r=ranked(S.score);const max=Math.max(1,...AREAS.map(a=>S.score[a]));const top=r.slice(0,2).map(x=>x[0]);
+ return header("Ką supratau","about")+'<div class="content">'+
+ '<p class="quote" style="margin:0">'+esc(S.about.length>160?S.about.slice(0,160)+"…":S.about)+'</p>'+
+ '<div class="card"><h3>Sritys, kuriose tau sekasi</h3>'+(r.length?'<div class="bars">'+AREAS.slice().sort((a,b)=>S.score[b]-S.score[a]).map(a=>'<div class="bar'+(top.includes(a)?" lead":"")+'"><span>'+a+'</span><span class="n">'+S.score[a]+'</span><div class="track"><div class="fill" style="width:'+(S.score[a]/max*100)+'%"></div></div></div>').join("")+'</div>':'<p class="empty">Iš aprašymo sunku nustatyti sritis. Paminėk konkrečias pamokas ar veiklas.</p>')+
+ '<p class="muted small" style="margin:0">Tai galimos kryptys pagal tavo žodžius, ne galutinis įvertinimas.</p></div>'+
+ '<div class="card"><h3>Galimos stiprybės</h3>'+(S.strengths.length?'<p class="muted small" style="margin:0">Pažymėk, kas tau tinka.</p><div>'+S.strengths.map(s=>{const v=S.strengthState[s]||"";return '<div class="strength '+v+'"><span>'+s+'</span><div class="yn"><button type="button" class="'+(v==="yes"?"on-yes":"")+'" data-str="'+s+'" data-v="yes">Tinka</button><button type="button" class="'+(v==="no"?"on-no":"")+'" data-str="'+s+'" data-v="no">Netinka</button></div></div>';}).join("")+'</div>':'<p class="empty">Stiprybių neatpažinau. Papasakok, ką darai gerai.</p>')+'</div>'+
+ '<button class="btn" type="button" data-go="studies">Žiūrėti tinkamas studijas</button>'+
+ '<div class="row"><button class="btn ghost" type="button" data-go="acts">Veiklos</button><button class="btn ghost" type="button" data-go="about">Redaguoti</button></div>'+
+ '</div>'+tabbar();};
+
+/* chat */
+function msgHTML(m,k){
+ if(m.who==="me") return '<div class="msg me">'+esc(m.t)+'</div>';
+ let h='<div class="ai-row"><span>'+mascot(30)+'</span><div class="msg ai">'+esc(m.t)+'</div></div>';
+ if(m.cards&&m.cards.length) h+='<div class="rich">'+m.cards.map(cardHTML).join("")+'</div>';
+ if(m.after) h+='<div class="msg ai">'+esc(m.after)+'</div>';
+ return h+'<div class="msg-meta" style="margin-left:42px">Stepas · <button type="button" data-act="report">Pranešti apie netinkamą atsakymą</button></div>';
+}
+const CH3=["Kokios studijos man tiktų Lietuvoje?","Kur galiu išbandyti save?","Su kuo pasitarti mokykloje?"];
+function cardHTML(c){
+ if(c.type==="study"){const s=studyById(c.id);return '<div class="mini"><span class="t">'+s.prog+'</span><span class="muted small">'+INST[s.inst].name+' · '+INST[s.inst].city+'</span><div class="acts-row"><button type="button" data-go="study" data-id="'+s.id+'">Plačiau</button><button type="button" data-act="ccSheet" data-inst="'+s.inst+'">Kontaktai</button></div></div>';}
+ if(c.type==="spec"){const sch=school();if(!sch||!sch.spec.length)return '<div class="mini"><span class="t">Tavo mokyklos specialistų dar nėra sistemoje</span><span class="muted small">Gali kreiptis į klasės vadovą.</span></div>';return sch.spec.map((sp,i)=>'<div class="mini"><span class="t">'+sp.name+'</span><span class="muted small">'+sp.role+' · '+sch.name+'</span><div class="acts-row"><button type="button" data-act="specSheet" data-i="'+i+'">Kontaktai</button></div></div>').join("");}
+ if(c.type==="act"){const a=actById(c.id);return '<div class="mini"><span class="t">'+a.name+'</span><span class="muted small">'+a.who+' · '+a.when+'</span><div class="acts-row"><button type="button" data-go="act" data-id="'+a.id+'">Plačiau</button></div></div>';}
+ return "";
+}
+VW.chat=()=>{
+ const chips=S.typing?[]:CH3;
+ return '<header class="top"><span style="flex:none">'+mascot(38)+'</span><div style="flex:1"><h2 style="margin:0">Stepas</h2><span class="muted small">Tavo DI pagalbininkas</span></div></header>'+
+ (S.aiConsent?'<div class="chat" id="chat">'+S.chat.map(msgHTML).join("")+(S.typing?'<div class="msg ai"><span class="typing"><i></i><i></i><i></i></span></div>':'')+'</div>'+
+ '<div class="composer">'+(chips.length?'<div class="chips">'+chips.map((c,k)=>'<button class="chip" type="button" data-chip="'+k+'">'+esc(c)+'</button>').join("")+'</div>':'')+
+ '<form id="chatForm"><label for="chatIn" style="position:absolute;left:-9999px">Žinutė</label><input id="chatIn" placeholder="Klausk apie studijas, veiklas, profesijas…" autocomplete="off"'+(S.typing?" disabled":"")+'><button class="send" type="submit" aria-label="Siųsti">'+ICON.send+'</button></form></div>'
+ :'<div class="content"><div class="card"><h3>Pokalbis dar neįjungtas</h3><p class="muted small" style="margin:0">Kad galėtum kalbėtis su DI, reikia tavo sutikimo.</p><button class="btn" type="button" data-act="consent">Peržiūrėti ir įjungti</button></div></div>')+tabbar();};
+
+function scrollChat(){const c=$("#chat");if(c)c.scrollTop=c.scrollHeight;}
+function aiSay(m){S.typing=true;render();scrollChat();setTimeout(()=>{S.typing=false;S.chat.push(Object.assign({who:"ai"},m));render();scrollChat();},900);}
+function startChat(){
+ if(S.chat.length){setTimeout(scrollChat,0);return;}
+ const a=myAreas();
+ aiSay({t:"Labas, "+nm()+"! Čia Stepas. "+(a.length?"Tau geriausiai sekasi: "+a.map(lc).join(" ir ")+". ":"")+"Klausk apie studijas, veiklas ar pasirink vieną iš variantų."});
+}
+function respond(text){
+ const n=norm(text);
+ const areas=ranked(detectAreas(text)).slice(0,2).map(x=>x[0]);
+ if(areas.length) S.chatAreas=areas;
+ const use=areas.length?areas:myAreas();
+ const named=use.length?" ("+use.map(lc).join(", ")+")":"";
+ if(/specialist|konsult|kontakt|pasitart|patarti|kreiptis|su kuo/.test(n)&&!/studij|universitet/.test(n)){
+   const sch=school();
+   aiSay({t:sch&&sch.spec.length?"Tavo mokykloje padeda šie specialistai:":"Tavo mokyklos specialistų dar nėra sistemoje. Kreipkis į klasės vadovą.",cards:[{type:"spec"}]});return;}
+ if(/reikalavim|balas|egzamin|kaip stoti|stojimo/.test(n)){
+   aiSay({t:"Stojama per LAMA BPO. Balas skaičiuojamas iš brandos egzaminų ir pažymių, o reikalavimai keičiasi kasmet, tad tikrink lamabpo.lt."});return;}
+ if(/studij|universitet|stoj|koleg|aukstoj|bakalaur|studijuot/.test(n)){
+   const abroad=/uzsien|europ|anglij|danij|olandij|vokietij/.test(n);
+   aiSay({t:(abroad?"Kol kas rodau tik Lietuvos programas. ":"")+"Tau tinkančios programos Lietuvoje"+named+":",cards:studiesFor(use).slice(0,3).map(s=>({type:"study",id:s.id}))});return;}
+ if(/veikl|isbandyt|burel|savanor|praktik|seseliav|vasar/.test(n)){
+   aiSay({t:"Veiklos, kuriose gali išbandyti save"+named+":",cards:actsFor(use).slice(0,3).map(a=>({type:"act",id:a.id}))});return;}
+ if(/papasakok apie/.test(n)){aiSay({t:"Tikroje programėlėje čia DI trumpai papasakotų apie programos turinį ir karjeros galimybes pagal oficialų universiteto puslapį."});return;}
+ if(areas.length){aiSay({t:"Supratau, tau artima: "+areas.map(lc).join(" ir ")+". Pasirink, ką parodyti."});return;}
+ aiSay({t:"Papasakok, kas tau sekasi, arba pasirink vieną iš variantų."});
+}
+function send(text){if(!text.trim()||S.typing)return;S.chat.push({who:"me",t:text.trim()});respond(text);}
+
+/* activities */
+VW.acts=()=>{
+ const top=myAreas();const fl=["Tinka tau","Visos"].concat(AREAS);
+ let list=S.filter==="Tinka tau"?actsFor(top):S.filter==="Visos"?ACTS:ACTS.filter(a=>a.areas.includes(S.filter));
+ const limited=!premium()&&list.length>3;if(limited)list=list.slice(0,3);
+ return header("Veiklos")+band("ac",ICON.grid,"Išbandyk save","Būreliai, programos, savanorystė ir šešėliavimas")+'<div class="filters" role="toolbar" aria-label="Filtrai">'+fl.map(f=>'<button class="chip'+(S.filter===f?" on":"")+'" type="button" data-filter="'+f+'">'+f+'</button>').join("")+'</div>'+
+ '<div class="content">'+ex+'<p class="muted small" style="margin:0">'+list.length+' veiklos</p>'+
+ (list.length?list.map(a=>'<button class="act ac" type="button" data-go="act" data-id="'+a.id+'"><span class="row" style="justify-content:space-between;align-items:center"><span class="t" style="flex:none">'+a.name+'</span>'+ICON.chev+'</span><span class="muted small">'+a.who+' · '+a.where+'</span><span class="tags">'+a.areas.slice(0,2).map(x=>'<span class="tag'+(top.includes(x)?" ac":"")+'">'+x+'</span>').join("")+(S.tried.includes(a.id)?'<span class="tag" style="background:var(--ok-soft);color:var(--ok)">Išbandyta</span>':'')+'</span></button>').join(""):'<p class="empty">Šioje srityje veiklų dar nėra.</p>')+
+ (limited?lockCard("Nemokamame plane matai 3 programų pasiūlymus. Su Premium matysi visus."):'')+'</div>'+tabbar();};
+VW.act=()=>{const a=actById(S.params.id);const saved=S.saved.includes(a.id);const tried=S.tried.includes(a.id);
+ return header(a.name,"acts")+'<div class="content">'+
+ '<p class="kicker ac">Veikla</p><p style="margin:0">'+a.about+'</p><div class="tags">'+a.areas.map(x=>'<span class="tag ac">'+x+'</span>').join("")+'</div>'+
+ '<div class="card"><dl class="facts" style="margin:0"><div><dt>Kam skirta</dt><dd>'+a.who+'</dd></div><div><dt>Kur</dt><dd>'+a.where+'</dd></div><div><dt>Kada</dt><dd>'+a.when+'</dd></div><div><dt>Kaip prisijungti</dt><dd>'+a.how+'</dd></div></dl></div>'+ex+
+ '<div style="margin-top:auto;display:grid;gap:8px"><button class="btn" type="button" data-act="signup">Registruotis</button><div class="row"><button class="btn ghost" type="button" data-act="save" data-id="'+a.id+'">'+(saved?"Išsaugota":"Išsaugoti")+'</button><button class="btn ghost" type="button" data-go="reflect" data-id="'+a.id+'">'+(tried?"Mano atsiliepimas":"Jau išbandžiau")+'</button></div></div>'+
+ '</div>'+tabbar();};
+const REPLY={"Patiko":"Puiku! Užsirašyk, kas konkrečiai patiko. Kitas žingsnis: pabandyk panašią, bet kiek sudėtingesnę veiklą toje pačioje srityje.","Nepatiko":"Tai irgi vertinga žinia. Pagalvok, kas buvo ne taip: pati veikla, aplinka ar žmonės. Pagal tai pasiūlysiu kitokią veiklą.","Sudomino":"Smalsumas yra geras ženklas. Pažiūrėk studijų skiltyje, kokios programos susijusios su šia sritimi."};
+VW.reflect=()=>{const a=actById(S.params.id);const r=S.reflections[a.id]||{};
+ return header("Apmąstymas","act")+'<div class="content">'+
+ '<p class="label" style="margin:0">'+a.name+'</p><h3 style="margin:0;font-size:1.1rem;font-weight:600">Kaip sekėsi?</h3>'+
+ '<div class="opts" role="radiogroup">'+Object.keys(REPLY).map(k=>'<button type="button" role="radio" aria-checked="'+(r.v===k)+'" class="'+(r.v===k?"on":"")+'" data-feel="'+k+'">'+k+'</button>').join("")+'</div>'+
+ '<label class="field" for="f-note">Ką norėtum prisiminti? (nebūtina)<textarea id="f-note" rows="3" placeholder="pvz., patiko dirbti su žmonėmis">'+esc(r.note||"")+'</textarea></label>'+
+ (r.saved?'<div class="ai-box"><b>Stepas:</b> '+REPLY[r.v]+'</div><button class="btn" type="button" data-go="home">Grįžti į pradžią</button>':'<button class="btn" type="button" data-act="saveReflect" data-id="'+a.id+'"'+(r.v?"":" disabled")+'>Išsaugoti</button>')+
+ '</div>'+tabbar();};
+
+/* studies */
+function band(k,icon,title,sub){return '<div class="band '+k+'"><span class="ic">'+icon+'</span><div><b>'+title+'</b><span>'+sub+'</span></div></div>';}
+function rankStudies(){const w={};AREAS.forEach(a=>w[a]=S.score[a]||0);if(!ranked(S.score).length)S.chatAreas.forEach(a=>w[a]=1);
+ const sc=STUDIES.map(s=>[s,s.areas.reduce((t,a)=>t+w[a],0)+(w[s.areas[0]]||0)*0.5]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+ const mx=sc.length?sc[0][1]:1;return sc.map(([s,v])=>({s,fit:Math.round(62+36*v/mx),why:s.areas.filter(a=>w[a]>0).map(lc)}));}
+function studiesTop(){return '<div style="flex:none;background:var(--surface);padding:10px 16px 0;display:grid;gap:10px"><div class="seg" style="grid-template-columns:1fr 1fr" role="tablist"><button type="button" role="tab" aria-selected="'+(S.stab==="lt")+'" class="'+(S.stab==="lt"?"on":"")+'" data-stab="lt">Lietuva</button><button type="button" role="tab" aria-selected="'+(S.stab==="abroad")+'" class="'+(S.stab==="abroad"?"on":"")+'" data-stab="abroad">Užsienis</button></div>'+
+ (S.stab==="lt"?'<div class="row" style="gap:18px;border-bottom:1px solid var(--line)">'+[["prog","Programos"],["inst","Universitetai"]].map(v=>'<button type="button" data-sview="'+v[0]+'" style="flex:none;border:none;background:none;padding:6px 0 10px;cursor:pointer;font:inherit;font-weight:'+(S.sview===v[0]?600:500)+';color:'+(S.sview===v[0]?"var(--ink)":"var(--muted)")+';border-bottom:2px solid '+(S.sview===v[0]?"var(--ink)":"transparent")+';margin-bottom:-1px">'+v[1]+'</button>').join("")+'</div>':'')+'</div>';}
+VW.studies=()=>{
+ if(S.stab==="abroad") return header("Studijos")+studiesTop()+'<div class="content"><div class="card" style="text-align:center;padding:28px 16px"><h3>Užsienio universitetai</h3><p class="muted small" style="margin:0">Skiltis ruošiama.</p></div></div>'+tabbar();
+ if(S.sview==="inst"){const top=myAreas();return header("Studijos")+studiesTop()+'<div class="content">'+ex+Object.keys(INST).map(k=>{const n=STUDIES.filter(s=>s.inst===k).length;const fit=STUDIES.some(s=>s.inst===k&&s.areas.some(a=>top.includes(a)));return '<button class="act" type="button" data-go="inst" data-id="'+k+'"><span class="row" style="justify-content:space-between;align-items:center"><span class="t" style="flex:1">'+INST[k].name+'</span>'+ICON.chev+'</span><span class="muted small">'+INST[k].city+' · '+INST[k].type+'</span><span class="tags"><span class="tag">'+n+' progr. šiame sąraše</span>'+(fit?'<span class="tag m">Yra tau tinkančių</span>':'')+'</span></button>';}).join("")+'</div>'+tabbar();}
+ const top=myAreas();const fl=["Tinka tau","Visos"].concat(AREAS);
+ const rk=S.sfilter==="Tinka tau"&&top.length?rankStudies():null;
+ let list=rk?rk.map(x=>x.s):S.sfilter==="Visos"||S.sfilter==="Tinka tau"?STUDIES:STUDIES.filter(s=>s.areas.includes(S.sfilter));
+ return header("Studijos")+band("st",ICON.cap,"Rask savo studijas","Programos, universitetai ir stojimas")+studiesTop()+'<div class="filters" role="toolbar" aria-label="Filtrai">'+fl.map(f=>'<button class="chip'+(S.sfilter===f?" on":"")+'" type="button" data-sfilter="'+f+'">'+f+'</button>').join("")+'</div>'+
+ '<div class="content">'+(S.sfilter==="Tinka tau"&&!top.length?'<div class="card"><h3>Kad atrinktume tiksliau</h3><p class="muted small" style="margin:0">Aprašyk, kas tau sekasi, ir rodysime tau tinkančias programas.</p><button class="btn ghost" type="button" data-go="about">Rašyti aprašymą</button></div>':'')+
+ (rk?'<div class="hello" style="grid-template-columns:44px 1fr"><span>'+mascot(44)+'</span><div class="bubble"><p class="small">Surikiavau programas pagal tai, kas tau sekasi labiausiai. Pirmoji tinka geriausiai.</p></div></div>':'')+
+ ex+'<p class="muted small" style="margin:0">'+list.length+' programos Lietuvoje · stojimo sąlygas tikrink LAMA BPO</p>'+
+ list.map((s,i)=>{const r=rk&&rk[i];return '<button class="act st" type="button" data-go="study" data-id="'+s.id+'"><span class="row" style="justify-content:space-between;align-items:center;gap:10px">'+(r?'<span class="num'+(i===0?" n1":"")+'">'+(i+1)+'</span>':'')+'<span class="t" style="flex:1">'+s.prog+'</span>'+(r?'<span class="fit" style="flex:none">Tinka '+r.fit+'%</span>':ICON.chev)+'</span><span class="muted small">'+INST[s.inst].name+' · '+INST[s.inst].city+'</span>'+(r&&r.why.length?'<span class="small" style="color:var(--stu)">Nes tau sekasi: '+r.why.join(", ")+'</span>':'')+'<span class="tags">'+s.areas.map(x=>'<span class="tag'+(top.includes(x)?" st":"")+'">'+x+'</span>').join("")+(S.savedStudies.includes(s.id)?'<span class="tag" style="background:var(--ok-soft);color:var(--ok)">Išsaugota</span>':'')+'</span></button>';}).join("")+
+ '</div>'+tabbar();};
+VW.study=()=>{const s=studyById(S.params.id);const c=CC(s.inst);const saved=S.savedStudies.includes(s.id);
+ return header(s.prog,S.params.from==="inst"?"inst":"studies")+'<div class="content">'+
+ (function(){const r=rankStudies().findIndex(x=>x.s.id===s.id);const rr=rankStudies()[r];return '<p class="kicker st">Studijų programa'+(r>=0?' · tau tinka '+rr.fit+'%, #'+(r+1)+' sąraše':'')+'</p>';})()+'<button class="act st" type="button" data-go="inst" data-id="'+s.inst+'" style="padding:12px 14px"><span class="row" style="justify-content:space-between;align-items:center"><span style="flex:1"><span class="t">'+INST[s.inst].name+'</span><br><span class="muted small">'+INST[s.inst].city+' · karjeros specialistai, aprašymas, apgyvendinimas</span></span>'+ICON.chev+'</span></button><div class="tags">'+s.areas.map(x=>'<span class="tag st">'+x+'</span>').join("")+'</div>'+
+ '<div class="card"><h3>Apie programą</h3><p style="margin:0">'+s.about+'</p></div>'+
+ '<div class="card"><h3>Stojimas</h3><p class="small" style="margin:0">Konkursinis balas ir minimalūs reikalavimai keičiasi kasmet. Tikslią informaciją rasi <a class="link" href="https://www.lamabpo.lt" target="_blank" rel="noopener">LAMA BPO svetainėje</a>.</p></div>'+
+ '<div class="card"><h3>Universiteto karjeros centras</h3><div class="kv"><span>El. paštas</span>'+c.email+'</div><div class="kv"><span>Telefonas</span>'+c.phone+'</div><div class="kv"><span>Darbo laikas</span>'+c.hours+'</div><button class="btn ghost" type="button" data-act="write" data-to="'+esc(INST[s.inst].name+" karjeros centras")+'">Parašyti</button></div>'+ex+
+ '<div style="display:grid;gap:8px"><button class="btn" type="button" data-act="saveStudy" data-id="'+s.id+'">'+(saved?"Išsaugota":"Išsaugoti")+'</button><button class="btn ghost" type="button" data-act="askAbout" data-id="'+s.id+'">Klausti DI apie šią programą</button></div>'+
+ '</div>'+tabbar();};
+
+VW.inst=()=>{const k=S.params.id;const I=INST[k];const progs=STUDIES.filter(x=>x.inst===k);
+ return header(I.name,"studies")+'<div class="content">'+
+ '<p class="muted small" style="margin:0">'+I.city+' · '+I.type+'</p>'+
+ '<div class="card"><h3>Apie universitetą</h3><p style="margin:0">'+I.desc+'</p></div>'+
+ '<p class="section-title">Karjeros specialistai</p>'+CC_PEOPLE(k).map(p=>'<div class="card"><h3>'+p.role+'</h3><p class="muted small" style="margin:0">'+p.what+'</p><div class="kv"><span>El. paštas</span>'+p.email+'</div><div class="kv"><span>Telefonas</span>'+p.phone+'</div><div class="kv"><span>Darbo laikas</span>'+p.hours+'</div><button class="btn ghost" type="button" data-act="write" data-to="'+esc(I.name+", "+p.role.toLowerCase())+'">Parašyti</button></div>').join("")+
+ '<p class="section-title">Studijų programos</p>'+progs.map(x=>'<button class="act" type="button" data-act="openStudyFromInst" data-id="'+x.id+'"><span class="row" style="justify-content:space-between;align-items:center"><span class="t" style="flex:1">'+x.prog+'</span>'+ICON.chev+'</span><span class="muted small">'+x.about+'</span></button>').join("")+
+ '<p class="section-title">Apgyvendinimas aplinkui</p>'+ACCOM(k).map(a=>'<div class="card"><div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="flex:1">'+a.t+'</h3><b style="flex:none;font-size:.88rem">'+a.price+'</b></div><p class="muted small" style="margin:0">'+a.d+'</p><p class="small" style="margin:0">'+a.dist+'</p></div>').join("")+
+ ex+'<p class="muted small" style="margin:0">Kontaktai ir kainos pavyzdiniai. Tikroje programėlėje juos pateiks universitetai ir partneriai.</p>'+
+ '</div>'+tabbar();};
+
+/* calendar */
+function events(){
+ const ev=BASE_EVENTS.map(e=>Object.assign({},e)).concat(S.schoolEvents.map(e=>Object.assign({k:"mokykla"},e)));
+ if(S.booking&&S.role==="student") ev.push({d:SLOT_DATE[S.booking.slot]||"2026-11-17",t:"Konsultacija: "+S.booking.to+", "+S.booking.slot.split(" ")[1],k:"mano"});
+ if(S.role==="spec") S.cons.forEach(c=>ev.push({d:c.date,t:"Konsultacija: "+c.student+", "+c.slot.split(" ")[1],k:"mano"}));
+ return ev.sort((a,b)=>a.d<b.d?-1:1);}
+function evRow(e){const dt=new Date(e.d+"T12:00:00");const key=e.d+e.t;const on=!!S.reminders[key];
+ return '<div class="row" style="align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)"><div style="flex:none;width:44px;text-align:center;border-radius:10px;background:'+(e.k==="mano"?"#FDEBD8":"var(--bg)")+';padding:6px 0"><b style="display:block;font-size:1.05rem;line-height:1.1">'+dt.getDate()+'</b><span class="muted" style="font-size:.7rem">'+WD[dt.getDay()]+'</span></div><div style="flex:1;min-width:0"><div style="font-weight:500;font-size:.92rem">'+esc(e.t)+'</div><span class="muted small">'+MONTHS[dt.getMonth()]+' · '+EVTYPES[e.k]+'</span></div><button type="button" class="back" data-rem="'+esc(key)+'" aria-pressed="'+on+'" aria-label="Priminti" style="flex:none;color:'+(on?"#F28A32":"var(--muted)")+'">'+ICON.bell+'</button></div>';}
+VW.calendar=()=>{const fl=["Visi"].concat(Object.keys(EVTYPES));let ev=events();if(S.efilter!=="Visi")ev=ev.filter(e=>e.k===S.efilter);
+ let html="",last="";ev.forEach(e=>{const dt=new Date(e.d+"T12:00:00");const m=dt.getFullYear()+" m. "+MONTHS[dt.getMonth()];if(m!==last){html+='<p class="section-title" style="margin:10px 0 0">'+m+'</p>';last=m;}html+=evRow(e);});
+ return header("Svarbios datos",S.role==="spec"?null:"home",S.role==="spec"?'<button class="btn text" type="button" data-act="addEvent" style="width:auto;padding:0">+ Pridėti</button>':'')+'<div class="filters" role="toolbar" aria-label="Filtrai">'+fl.map(f=>'<button class="chip'+(S.efilter===f?" on":"")+'" type="button" data-efilter="'+f+'">'+(f==="Visi"?"Visi":EVTYPES[f])+'</button>').join("")+'</div>'+
+ '<div class="content" style="gap:0">'+(html||'<p class="empty">Šioje kategorijoje datų nėra.</p>')+'<div style="margin-top:14px">'+ex+'</div><p class="muted small" style="margin:6px 0 0">Stojimo ir egzaminų datas visada tikrink oficialiuose šaltiniuose. Varpelis įjungia priminimą.</p></div>'+tabbar();};
+
+/* specialist side */
+function sp(){return SCHOOLS[0].spec[0];}
+function bookingStatus(){const c=S.cons.find(x=>x.id==="mine");return c?c.status.toLowerCase():"laukia patvirtinimo";}
+VW.sLogin=()=>header("Specialisto prisijungimas","welcome")+'<div class="content">'+
+ '<p class="muted small" style="margin:0">Karjeros specialistai prisijungia mokyklos suteiktu el. paštu.</p>'+
+ '<label class="field" for="s-email">Darbo el. paštas<input id="s-email" value="'+sp().email+'"></label>'+
+ '<label class="field" for="s-pass">Slaptažodis<input id="s-pass" type="password" value="prototipas"></label>'+
+ '<div class="field"><span>Mokykla</span><div class="picked"><span>'+SCHOOLS[0].name+', '+SCHOOLS[0].city+'</span></div></div>'+
+ '<div style="margin-top:auto"><button class="btn" type="button" data-act="specEnter">Prisijungti</button></div></div>';
+VW.sHome=()=>{const waiting=S.cons.filter(c=>c.status==="Laukia").length;const unread=S.threads.filter(t=>t.unread).length;const pupils=allPupils();
+ const agg={};AREAS.forEach(a=>agg[a]=0);pupils.forEach(p=>p.areas.forEach(a=>agg[a]++));const mx=Math.max(1,...Object.values(agg));
+ return header("Laba diena, "+sp().name.split(" ")[0],null,'<button class="avatar-btn" type="button" data-go="sProfile" aria-label="Profilis">'+sp().name.split(" ").map(w=>w[0]).join("")+'</button>')+'<div class="content">'+
+ '<p class="muted small" style="margin:-6px 0 0">'+sp().role+' · '+SCHOOLS[0].name+'</p>'+
+ '<div class="row">'+[[S.cons.length,"Konsultacijos šią savaitę","sCons"],[unread,"Neatsakytos žinutės","sMsgs"],[pupils.length,"Mokiniai bendrina profilį","sPupils"]].map(x=>'<button class="card" type="button" data-go="'+x[2]+'" style="text-align:left;cursor:pointer;padding:12px;gap:2px"><b style="font-size:1.5rem;font-variant-numeric:tabular-nums">'+x[0]+'</b><span class="muted" style="font-size:.75rem;line-height:1.3">'+x[1]+'</span></button>').join("")+'</div>'+
+ (waiting?'<div class="card next"><p class="label" style="color:#F28A32;margin:0">Laukia patvirtinimo</p><h3>'+waiting+' konsultacij'+(waiting===1?"a":"os")+'</h3><button class="btn" type="button" data-go="sCons">Peržiūrėti</button></div>':'')+
+ '<div class="card"><h3>Artimiausios konsultacijos</h3>'+S.cons.slice(0,3).map(consRow).join("")+'</div>'+
+ '<div class="card"><h3>Mokinių sritys</h3><p class="muted small" style="margin:0">Kiek mokinių domisi kiekviena sritimi.</p><div class="bars">'+AREAS.slice().sort((a,b)=>agg[b]-agg[a]).map(a=>'<div class="bar"><span>'+a+'</span><span class="n">'+agg[a]+'</span><div class="track"><div class="fill" style="width:'+(agg[a]/mx*100)+'%;background:var(--ink)"></div></div></div>').join("")+'</div></div>'+
+ '<div class="card"><h3>Dalyvavimas veiklose</h3><p style="margin:0"><b>'+pupils.filter(p=>p.acts.length).length+' iš '+pupils.length+'</b> mokinių išbandė bent vieną veiklą.</p></div>'+
+ '<div class="lock" style="background:var(--surface)"><b>'+ICON.lock+' Mokinių privatumas</b><span class="muted small">Mokinių pokalbiai su DI, atsakymai, diplomai ir CV jums nematomi. Asmeniškai matote tik tai, ką mokinys pats nusprendė bendrinti.</span></div>'+
+ '<button class="btn ghost" type="button" data-act="addEvent">Pridėti renginį mokinių kalendoriui</button>'+
+ '</div>'+tabbar();};
+function consRow(c){return '<div class="row" style="align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)"><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:.92rem">'+esc(c.student)+' <span class="muted" style="font-weight:400">· '+c.grade+' kl.</span></div><span class="muted small">'+c.slot+' · '+esc(c.topic)+'</span></div><span class="pill '+(c.status==="Patvirtinta"?"ok":"now")+'" style="flex:none">'+c.status+'</span></div>';}
+VW.sCons=()=>header("Konsultacijos")+'<div class="content">'+
+ '<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><div style="flex:1"><p class="label" style="margin:0">Mano konsultacijų laikas</p><p style="margin:2px 0 0;font-weight:500">'+esc(S.specHours)+'</p></div><button class="btn text" type="button" data-act="editHours" style="flex:none;width:auto;padding:0">Keisti</button></div></div>'+
+ S.cons.map(c=>'<div class="card">'+consRow(c).replace('border-bottom:1px solid var(--line)','')+(c.status==="Laukia"?'<div class="row"><button class="btn ghost" type="button" data-act="consOther" data-id="'+c.id+'">Siūlyti kitą laiką</button><button class="btn" type="button" data-act="consOk" data-id="'+c.id+'">Patvirtinti</button></div>':'')+'</div>').join("")+
+ '</div>'+tabbar();
+VW.sMsgs=()=>header("Žinutės")+'<div class="content">'+S.threads.map(t=>{const l=t.msgs[t.msgs.length-1];return '<button class="act" type="button" data-go="sThread" data-id="'+t.id+'"><span class="row" style="justify-content:space-between;align-items:center"><span class="t" style="flex:1">'+esc(t.student)+' <span class="muted" style="font-weight:400">· '+t.grade+' kl.</span></span>'+(t.unread?'<span class="pill now" style="flex:none">Nauja</span>':'<span class="muted small" style="flex:none">'+l.time+'</span>')+'</span><span class="muted small" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(l.me?"Jūs: ":"")+esc(l.t)+'</span></button>';}).join("")+'</div>'+tabbar();
+VW.sThread=()=>{const t=S.threads.find(x=>x.id===S.params.id);t.unread=false;
+ return header(esc(t.student),"sMsgs")+'<div class="chat" id="chat">'+t.msgs.map(m=>'<div class="msg '+(m.me?"me":"ai")+'">'+esc(m.t)+'</div>').join("")+'</div>'+
+ '<div class="composer"><form id="replyForm" data-id="'+t.id+'"><label for="replyIn" style="position:absolute;left:-9999px">Atsakymas</label><input id="replyIn" placeholder="Rašyti atsakymą…" autocomplete="off"><button class="send" type="submit" aria-label="Siųsti">'+ICON.send+'</button></form></div>'+tabbar();};
+function allPupils(){const list=S.pupils.slice();if(S.share&&S.name)list.unshift({name:S.name,grade:S.grade,areas:myAreas(),strengths:Object.keys(S.strengthState).filter(k=>S.strengthState[k]==="yes"),studies:S.savedStudies,acts:S.tried,active:"Ką tik",you:true});return list;}
+VW.sPupils=()=>header("Mokiniai")+'<div class="content"><p class="muted small" style="margin:0">Matote tik mokinius, kurie patys leido bendrinti savo rezultatus. Jų pokalbiai su DI, atsakymai, diplomai ir CV nematomi.</p>'+
+ allPupils().map((p,i)=>'<button class="act" type="button" data-go="sPupil" data-id="'+i+'"><span class="row" style="justify-content:space-between;align-items:center"><span class="t" style="flex:1">'+esc(p.name)+' <span class="muted" style="font-weight:400">· '+p.grade+' kl.</span></span><span class="muted small" style="flex:none">'+p.active+'</span></span><span class="tags">'+(p.areas.length?p.areas.map(a=>'<span class="tag m">'+a+'</span>').join(""):'<span class="tag">Sritys dar nenustatytos</span>')+'</span></button>').join("")+'</div>'+tabbar();
+VW.sPupil=()=>{const p=allPupils()[+S.params.id];
+ return header(esc(p.name),"sPupils")+'<div class="content">'+
+ '<p class="muted small" style="margin:0">'+p.grade+' klasė · paskutinį kartą aktyvus: '+p.active.toLowerCase()+'</p>'+
+ '<div class="card"><h3>Sritys</h3>'+(p.areas.length?'<div class="tags">'+p.areas.map(a=>'<span class="tag m">'+a+'</span>').join("")+'</div>':'<p class="empty">Dar nenustatytos.</p>')+'</div>'+
+ '<div class="card"><h3>Patvirtintos stiprybės</h3>'+(p.strengths.length?'<p style="margin:0">'+p.strengths.join(", ")+'</p>':'<p class="empty">Nepažymėta.</p>')+'</div>'+
+ '<div class="card"><h3>Išsaugotos studijos</h3>'+(p.studies.length?p.studies.map(id=>{const x=studyById(id);return '<p style="margin:0">'+x.prog+' <span class="muted small">· '+INST[x.inst].name+'</span></p>';}).join(""):'<p class="empty">Dar nėra.</p>')+'</div>'+
+ '<div class="card"><h3>Išbandytos veiklos</h3>'+(p.acts.length?p.acts.map(id=>'<p style="margin:0">'+actById(id).name+'</p>').join(""):'<p class="empty">Dar nėra.</p>')+'</div>'+
+ '<button class="btn" type="button" data-act="writePupil" data-name="'+esc(p.name)+'" data-grade="'+p.grade+'">Parašyti mokiniui</button>'+
+ '</div>'+tabbar();};
+VW.sProfile=()=>header("Profilis","sHome")+'<div class="content">'+
+ '<div class="card" style="grid-template-columns:auto 1fr;align-items:center"><div class="avatar">'+sp().name.split(" ").map(w=>w[0]).join("")+'</div><div><h3>'+sp().name+'</h3><p class="muted small" style="margin:0">'+sp().role+'<br>'+SCHOOLS[0].name+', '+SCHOOLS[0].city+'</p></div></div>'+
+ '<div class="card"><div class="kv"><span>Konsultacijos</span>'+esc(S.specHours)+', '+sp().room+'</div><div class="kv"><span>El. paštas</span>'+sp().email+'</div><div class="kv"><span>Telefonas</span>'+sp().phone+'</div><button class="btn ghost" type="button" data-act="editHours">Keisti konsultacijų laiką</button></div>'+
+ '<div class="list"><button type="button" data-act="logout"><span>Atsijungti</span>'+ICON.chev+'</button></div>'+
+ '</div>'+tabbar();
+
+/* tasks & points */
+const premium=()=>S.plan==="premium";
+function lockCard(t){return '<div class="lock"><b>'+ICON.lock+' Prieinama su Premium</b><span class="muted small">'+t+'</span><button class="btn ghost" type="button" data-go="plans">Peržiūrėti planus</button></div>';}
+function nextTask(){return TASKS.find(t=>!S.tasksDone.includes(t.id));}
+function taskLimited(){return !premium()&&S.tasksDone.length>=FREE_TASKS;}
+function pbar(){const v=Math.min(100,S.points);return '<div class="row" style="justify-content:space-between;align-items:baseline"><b style="flex:none;font-variant-numeric:tabular-nums">'+S.points+' taškų</b><span class="muted small" style="flex:none">'+(S.points<100?"iki apžvalgos liko "+(100-S.points):"apžvalga atrakinta")+'</span></div><div class="pbar" role="progressbar" aria-valuenow="'+v+'" aria-valuemin="0" aria-valuemax="100"><div style="width:'+v+'%"></div></div>';}
+function taskCard(){const t=nextTask();
+ return '<div class="card me"><div class="row" style="justify-content:space-between;align-items:center"><p class="kicker me" style="flex:1">Dienos pažinimo užduotis</p><span class="small" style="flex:none;display:flex;align-items:center;gap:4px;font-weight:600;color:'+(S.doneToday?"#D9681B":"var(--muted)")+'">'+streakIcon(20,S.doneToday)+(S.doneToday?"Šiandien atlikta":"Įžiebk seriją")+'</span></div><div class="row" style="justify-content:space-between;align-items:center"><h3 style="flex:1">Savęs pažinimo užduotis</h3><button class="btn text" type="button" data-go="progress" style="flex:none;width:auto;padding:0">Pažanga</button></div>'+pbar()+
+ (!t?'<p class="muted small" style="margin:0">Visas užduotis atlikai. Naujų atsiras po kelių dienų.</p>':
+  taskLimited()?'<p class="muted small" style="margin:0">Šios savaitės nemokamas užduotis atlikai. Kita užduotis po 2 dienų.</p><button class="btn ghost" type="button" data-go="plans">Daugiau užduočių su Premium</button>':
+  '<p style="margin:0">'+esc(t.q)+'</p><button class="btn" type="button" data-go="task" style="background:var(--me);border-color:var(--me)">Atlikti užduotį (+'+TASK_PTS+' taškų)</button>')+
+ (S.points>=100&&!S.reviewSeen?'<button class="btn ghost" type="button" data-go="review">Peržiūrėti, ką sužinojai apie save</button>':'')+'</div>';}
+VW.task=()=>{const t=nextTask();if(!t)return VW.progress();
+ return header("Užduotis","home")+band("me",'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',"Pažink save","Trumpa užduotis, apie 2 minutės")+'<div class="content">'+
+ '<p class="label" style="margin:0">Užduotis '+(S.tasksDone.length+1)+' · +'+TASK_PTS+' taškų</p><h3 style="margin:0;font-size:1.15rem;font-weight:600">'+esc(t.q)+'</h3>'+
+ (t.type==="choice"?'<div class="opts" role="radiogroup">'+t.opts.map(o=>'<button type="button" role="radio" aria-checked="'+(S.params.pick===o)+'" class="'+(S.params.pick===o?"on":"")+'" data-pick="'+esc(o)+'">'+o+'</button>').join("")+'</div>'
+  :'<label class="field" for="f-task"><span style="position:absolute;left:-9999px">Atsakymas</span><textarea id="f-task" rows="5" placeholder="Parašyk kelis sakinius…"></textarea></label>')+
+ '<p class="muted small" style="margin:0">Teisingų ar neteisingų atsakymų nėra. Taškai skiriami už dalyvavimą, ne už atsakymą.</p>'+
+ '<div style="margin-top:auto"><button class="btn" type="button" data-act="doTask" style="background:var(--me);border-color:var(--me)">Atlikti</button></div></div>'+tabbar();};
+VW.progress=()=>header("Tavo pažanga","home")+'<div class="content">'+
+ '<div class="card">'+pbar()+'<p class="muted small" style="margin:0">Surinkęs 100 taškų gausi apžvalgą, ką sužinojai apie save. Taškai nevertina tavo atsakymų.</p></div>'+
+ '<div class="card"><h3>Ženkliukai</h3><div class="badges">'+BADGES.map(b=>'<div class="badge'+(b[2]()?" on":"")+'"><i>'+b[0]+'</i>'+b[1]+'</div>').join("")+'</div></div>'+
+ '<div class="card"><h3>Atliktos užduotys</h3>'+(S.tasksDone.length?S.tasksDone.map(id=>{const t=TASKS.find(x=>x.id===id);return '<div style="padding:6px 0;border-bottom:1px solid var(--line)"><div class="small" style="font-weight:600">'+esc(t.q)+'</div><div class="muted small">'+esc(S.taskAnswers[id]||"")+'</div></div>';}).join(""):'<p class="empty">Dar neatlikai nė vienos užduoties.</p>')+'</div>'+
+ (S.points>=100?'<button class="btn" type="button" data-go="review">Ką sužinojau apie save</button>':'')+
+ '<button class="btn ghost" type="button" data-go="acts">Žiūrėti programų pasiūlymus jau dabar</button>'+
+ '</div>'+tabbar();
+VW.review=()=>{S.reviewSeen=true;const top=myAreas();const conf=Object.keys(S.strengthState).filter(k=>S.strengthState[k]==="yes");
+ return header("Ką sužinojai apie save","home")+'<div class="content">'+
+ '<div class="card next"><p class="label" style="color:#F28A32;margin:0">100 taškų</p><h3>Puikus darbas, '+esc(nm())+'!</h3><p class="muted small" style="margin:0">Štai ką pastebėjome iš tavo aprašymo ir užduočių.</p></div>'+
+ '<div class="card"><h3>Tau artimos sritys</h3>'+(top.length?'<div class="tags">'+top.map(a=>'<span class="tag m">'+a+'</span>').join("")+'</div>':'<p class="empty">Dar neaišku. Tai normalu.</p>')+'</div>'+
+ '<div class="card"><h3>Galimos stiprybės</h3>'+((conf.length?conf:S.strengths.slice(0,3)).length?'<p style="margin:0">'+(conf.length?conf:S.strengths.slice(0,3)).join(", ")+'</p>':'<p class="empty">Papildyk aprašymą apie save.</p>')+'</div>'+
+ '<div class="card"><h3>Iš tavo atsakymų</h3>'+S.tasksDone.slice(-3).map(id=>'<p class="small" style="margin:0">„'+esc(S.taskAnswers[id]||"")+'“</p>').join("")+'</div>'+
+ '<h3 style="margin:4px 0 0">Ar nori pereiti prie tau tinkamų programų paieškos?</h3>'+
+ '<button class="btn" type="button" data-act="toPrograms">Taip, rodyk programas</button><button class="btn ghost" type="button" data-go="home">Dar ne, tęsiu užduotis</button>'+
+ '</div>'+tabbar();};
+
+/* notifications */
+VW.notifs=()=>{S.notifSeen=true;const top=myAreas();const list=NOTIFS.filter(n=>!top.length||top.includes(n.area)).concat(NOTIFS.filter(n=>top.length&&!top.includes(n.area))).slice(0,4);
+ return header("Pranešimai","home")+'<div class="content">'+
+ '<div class="list"><button type="button" data-act="toggleNotif" role="switch" aria-checked="'+S.notifOn+'"><span>Pranešti apie naujas man tinkamas programas</span><span class="toggle'+(S.notifOn?" on":"")+'"></span></button></div>'+
+ (S.notifOn?'<div class="field"><span>Kaip dažnai</span><div class="seg" role="radiogroup">'+["Iš karto","Kartą per savaitę","Kartą per mėnesį"].map(f=>'<button type="button" role="radio" aria-checked="'+(S.notifFreq===f)+'" class="'+(S.notifFreq===f?"on":"")+'" data-freq="'+f+'" style="font-size:.78rem">'+f+'</button>').join("")+'</div></div>'+
+  '<p class="section-title">Naujausi</p>'+(premium()?list:list.slice(0,1)).map(n=>'<div class="card" style="gap:4px"><div class="row" style="justify-content:space-between"><b style="flex:1">'+n.t+'</b><span class="muted small" style="flex:none">'+n.when+'</span></div><span class="muted small">'+n.d+'</span><button class="btn text" type="button" data-go="acts" style="justify-self:start;width:auto;padding:4px 0 0">Peržiūrėti</button></div>').join("")+
+  (premium()?'':lockCard("Gauk pranešimus apie visas naujas tau tinkamas programas."))
+ :'<p class="empty">Pranešimai išjungti. Įjunk, jei nori sužinoti apie naujas programas pagal tavo sritis, klasę ir vietovę.</p>')+
+ '</div>'+tabbar();};
+
+/* specialists directory */
+function specMatches(){const q=norm(S.specQuery||"");const top=myAreas();
+ return SPECS.filter(x=>x.type!=="Mokykla"||x.school===S.schoolId).filter(x=>S.specType==="Visi"||x.type===S.specType).filter(x=>!S.specMine||!top.length||x.areas.some(a=>top.includes(a))).filter(x=>!q||norm(x.name+" "+x.role+" "+x.org).includes(q));}
+function initials(x){return (x.type==="Mokykla"?x.name:x.org).split(" ").slice(0,2).map(w=>w[0].toUpperCase()).join("");}
+VW.specs=()=>{const list=specMatches();
+ return header("Specialistai")+'<div style="flex:none;background:var(--surface);padding:12px 16px;display:grid;gap:10px;border-bottom:1px solid var(--line)"><label for="specQ" style="position:absolute;left:-9999px">Paieška</label><input id="specQ" value="'+esc(S.specQuery)+'" placeholder="Ieškok pagal vardą, sritį ar įstaigą" style="font:inherit;padding:10px 14px;border:1px solid var(--line);border-radius:10px">'+
+ '<div class="chips">'+["Visi","Mokykla","Universitetas","Kolegija"].map(t=>'<button class="chip'+(S.specType===t?" on":"")+'" type="button" data-stype="'+t+'">'+t+'</button>').join("")+'<button class="chip'+(S.specMine?" on":"")+'" type="button" data-act="toggleMine">Pagal mano sritis</button></div></div>'+
+ '<div class="content">'+
+ (S.myMsgs.length?'<p class="section-title">Mano užklausos</p>'+S.myMsgs.map(m=>'<div class="card"><p class="muted small" style="margin:0">Kam: '+esc(m.to)+'</p><p style="margin:0">'+esc(m.t)+'</p>'+(m.reply?'<div class="ai-box"><b>'+esc(m.to)+':</b> '+esc(m.reply)+'</div>':'<span class="pill" style="justify-self:start">Laukia atsakymo</span>')+'</div>').join("")+'<p class="section-title">Specialistai</p>':'')+
+ (list.length?list.map(x=>'<button class="act" type="button" data-go="spec" data-id="'+x.id+'"><span class="person" style="grid-template-columns:40px 1fr auto;align-items:center"><span class="avatar" style="width:40px;height:40px;font-size:.85rem">'+initials(x)+'</span><span><span class="t" style="display:block">'+x.name+'</span><span class="muted small">'+x.role+' · '+x.org+'</span></span>'+ICON.chev+'</span><span class="tags"><span class="tag">'+x.type+'</span>'+(x.consult?'<span class="tag m">Konsultuoja</span>':'')+'</span></button>').join(""):'<p class="empty">Nieko nerasta. Pakeisk paiešką ar filtrus.</p>')+
+ ex+'<p class="muted small" style="margin:0">Specialistų sąrašas priklausys nuo įstaigų dalyvavimo. Kontaktai pavyzdiniai.</p></div>'+tabbar();};
+VW.spec=()=>{const x=SPECS.find(y=>y.id===S.params.id);const free=x.type==="Mokykla"||premium();
+ return header(x.type==="Mokykla"?x.name:x.org,"specs")+'<div class="content">'+
+ '<div class="card"><div class="person"><div class="avatar">'+initials(x)+'</div><div><h3>'+x.name+'</h3><p class="muted small" style="margin:0">'+x.role+'<br>'+x.org+'</p></div></div><div class="tags"><span class="tag">'+x.type+'</span>'+x.areas.slice(0,3).map(a=>'<span class="tag m">'+a+'</span>').join("")+'</div></div>'+
+ '<div class="card"><h3>Apie</h3><p style="margin:0">'+x.about+'</p></div>'+
+ '<div class="card"><div class="kv"><span>'+(x.consult?"Konsultacijos":"Darbo laikas")+'</span>'+x.hours+'</div><div class="kv"><span>El. paštas</span>'+x.email+'</div><div class="kv"><span>Telefonas</span>'+x.phone+'</div></div>'+
+ (free?'<button class="btn" type="button" data-act="write" data-to="'+esc(x.type==="Mokykla"?x.name:x.org+", "+x.name.toLowerCase())+'">Siųsti užklausą</button>'+(x.consult?'<button class="btn ghost" type="button" data-act="book" data-to="'+esc(x.type==="Mokykla"?x.name:x.org)+'">Susitarti dėl konsultacijos</button>':'<p class="muted small" style="margin:0">Ši įstaiga konsultacijų registracijos per programėlę nesiūlo.</p>')
+  :lockCard("Užklausas universitetų ir kolegijų specialistams galima siųsti su Premium planu. Savo mokyklos specialistams rašyti gali nemokamai."))+
+ ex+'</div>'+tabbar();};
+VW.contacts=()=>VW.specs();
+
+/* portfolio & CV */
+VW.folio=()=>{const fromActs=S.tried.filter(id=>!S.portfolio.some(p=>p.src===id));
+ return header("Patirties aplankas","home")+'<div class="content">'+
+ '<p class="muted small" style="margin:0">Kaupk dalyvavimą programose, projektuose, savanorystėje ir konkursuose. Iš to vėliau paruošime CV juodraštį.</p>'+
+ S.portfolio.map(p=>'<div class="card">'+(p.img?'<img class="thumb" src="'+p.img+'" alt="Pažymėjimo nuotrauka: '+esc(p.title)+'">':'')+'<div class="row" style="justify-content:space-between;align-items:baseline"><h3 style="flex:1">'+esc(p.title)+'</h3><span class="muted small" style="flex:none">'+esc(p.date||"")+'</span></div><div class="tags"><span class="tag m">'+esc(p.type)+'</span>'+(p.img?'<span class="tag">Su pažymėjimu</span>':'')+'</div><p class="small" style="margin:0">'+esc(p.desc)+'</p><label class="check"><input type="checkbox" data-incv="'+p.id+'"'+(p.inCV?" checked":"")+'>Įtraukti į CV</label></div>').join("")+
+ (fromActs.length?'<div class="card"><h3>Pridėti iš išbandytų veiklų</h3>'+fromActs.map(id=>'<button class="btn ghost" type="button" data-act="addFromAct" data-id="'+id+'">+ '+actById(id).name+'</button>').join("")+'</div>':'')+
+ '<button class="btn" type="button" data-go="folioAdd">+ Pridėti patirtį</button>'+
+ '<button class="btn ghost" type="button" data-go="cv">Kurti CV juodraštį</button>'+
+ '</div>'+tabbar();};
+VW.folioAdd=()=>{const d=S.draft||{};
+ return header("Nauja patirtis","folio")+'<div class="content">'+
+ '<label class="field" for="pf-title">Pavadinimas<input id="pf-title" value="'+esc(d.title||"")+'" placeholder="pvz., Matematikos olimpiada"></label>'+
+ '<label class="field" for="pf-type">Tipas<select id="pf-type">'+["Programa","Projektas","Savanorystė","Konkursas","Kita"].map(t=>'<option'+(d.type===t?" selected":"")+'>'+t+'</option>').join("")+'</select></label>'+
+ '<label class="field" for="pf-date">Kada<input id="pf-date" type="month" value="'+esc(d.date||"2026-10")+'"></label>'+
+ '<label class="field" for="pf-desc">Ką veikei? (savais žodžiais)<textarea id="pf-desc" rows="3" placeholder="pvz., sprendžiau uždavinius, pasiekiau miesto etapą">'+esc(d.desc||"")+'</textarea></label>'+
+ '<label class="field" for="pf-img">Pažymėjimo ar diplomo nuotrauka (nebūtina)<input id="pf-img" type="file" accept="image/*"></label>'+
+ (d.img?'<img class="thumb" src="'+d.img+'" alt="Įkelta nuotrauka">':'')+
+ (d.preview?'<div class="ai-box"><b>Įrašo juodraštis:</b><br>'+esc(d.preview)+'</div><p class="muted small" style="margin:0">Patikrink, ar viskas teisinga. DI nieko neprideda nuo savęs.</p><button class="btn" type="button" data-act="saveFolio">Patvirtinti ir išsaugoti</button>'
+  :'<button class="btn" type="button" data-act="makeEntry">Sukurti įrašą</button>')+
+ '</div>'+tabbar();};
+function cvText(){const sch=school();const items=S.portfolio.filter(p=>p.inCV);const conf=Object.keys(S.strengthState).filter(k=>S.strengthState[k]==="yes");
+ return {name:nm(),line:(S.grade+" klasės mokinys(-ė)"+(sch?", "+sch.name:"")),email:S.email||"vardas@pastas.lt",about:(S.about.split(/[.!?]/)[0]||"").trim(),items,str:conf.length?conf:S.strengths.slice(0,3),areas:myAreas()};}
+VW.cv=()=>{if(!premium())return header("CV juodraštis","folio")+'<div class="content">'+lockCard("CV juodraštį iš tavo patirties aplanko galima sukurti su Premium planu.")+'</div>'+tabbar();
+ const c=cvText();
+ return header("CV juodraštis","folio")+'<div class="content">'+
+ '<p class="muted small" style="margin:0">Sudaryta tik iš to, ką pats įrašei. Peržiūrėk ir pataisyk prieš siųsdamas.</p>'+
+ '<div class="cv"><div><b style="font-size:1.1rem">'+esc(c.name)+'</b><div class="muted">'+esc(c.line)+' · '+esc(c.email)+'</div></div>'+
+ (c.about?'<div><h4>Apie mane</h4><p style="margin:4px 0 0">'+esc(c.about)+'.</p></div>':'')+
+ '<div><h4>Patirtis</h4>'+(c.items.length?c.items.map(p=>'<p style="margin:6px 0 0"><b>'+esc(p.title)+'</b> · '+esc(p.type)+(p.date?", "+esc(p.date):"")+'<br>'+esc(p.desc)+'</p>').join(""):'<p class="empty">Pažymėk aplanke, ką įtraukti.</p>')+'</div>'+
+ (c.str.length?'<div><h4>Stiprybės</h4><p style="margin:4px 0 0">'+c.str.join(", ")+'</p></div>':'')+
+ (c.areas.length?'<div><h4>Domėjimosi sritys</h4><p style="margin:4px 0 0">'+c.areas.join(", ")+'</p></div>':'')+'</div>'+
+ '<button class="btn" type="button" data-act="copyCV">Kopijuoti tekstą</button>'+
+ '</div>'+tabbar();};
+
+/* plans */
+VW.plans=()=>{const P=[
+ ["free","Nemokamas planas","Trumpai išbandyti programą",["Pradinė savęs pažinimo apklausa","Bendra interesų ir stiprybių apžvalga","Ribotas užduočių skaičius ("+FREE_TASKS+" per savaitę)","Ribotas programų pasiūlymų skaičius","Savo mokyklos karjeros specialistai"]],
+ ["premium","Premium mokiniui","Nuolatiniam naudojimui",["Reguliarios užduotys ir pažangos stebėjimas","Išsamesni pokalbiai su DI ir atnaujinamos įžvalgos","Daugiau asmeniškai atrinktų programų","Pranešimai apie naujas tinkamas galimybes","Patirties aplankas ir CV juodraštis","Užklausos universitetų ir kolegijų specialistams","Vėliau: studijų palyginimas ir stojimo planas"]],
+ ["school","Mokyklos planas","Prieiga visiems mokyklos mokiniams",["Premium funkcijos mokyklos mokiniams","Atskira skiltis karjeros specialistams","Apibendrinta klasės apžvalga: interesai, kryptys, dalyvavimas veiklose","Mokinių pokalbiai, atsakymai, diplomai ir CV mokytojams nematomi"]]];
+ return header("Planai",S.params.from||"profile")+'<div class="content">'+
+ P.map(x=>'<div class="plan'+(S.plan===x[0]?" cur":"")+'"><div class="row" style="justify-content:space-between;align-items:center"><h3 style="flex:1;margin:0">'+x[1]+'</h3>'+(S.plan===x[0]?'<span class="pill ok" style="flex:none">Dabartinis</span>':'')+'</div><span class="muted small">'+x[2]+'</span><ul>'+x[3].map(f=>'<li>'+f+'</li>').join("")+'</ul>'+
+  (x[0]==="premium"?(S.plan==="premium"?'<button class="btn ghost" type="button" data-act="setPlan" data-v="free">Grįžti į nemokamą (prototipe)</button>':'<p class="muted small" style="margin:0">Kaina dar derinama su mokiniais ir šeimomis.</p><button class="btn" type="button" data-act="setPlan" data-v="premium">Išbandyti Premium (prototipe)</button>'):
+   x[0]==="school"?'<button class="btn ghost" type="button" data-act="suggestSchool">Pasiūlyti savo mokyklai</button>':'')+'</div>').join("")+
+ '</div>'+tabbar();};
+
+/* contacts (old) */
+VW.contacts=()=>{const sch=school();const insts=[...new Set(studiesFor(myAreas()).map(s=>s.inst))].slice(0,4);
+ return header("Kontaktai")+'<div class="content">'+
+ (S.myMsgs.length?'<p class="section-title">Mano žinutės</p>'+S.myMsgs.map(m=>'<div class="card"><p class="muted small" style="margin:0">Kam: '+esc(m.to)+'</p><p style="margin:0">'+esc(m.t)+'</p>'+(m.reply?'<div class="ai-box"><b>'+esc(m.to)+':</b> '+esc(m.reply)+'</div>':'<span class="pill" style="justify-self:start">Laukia atsakymo</span>')+'</div>').join(""):'')+
+ '<p class="section-title">Mano mokykla</p>'+
+ (sch?('<p style="margin:0;font-weight:600">'+sch.name+', '+sch.city+'</p>'+(sch.spec.length?sch.spec.map(sp=>specCard(sp,null)).join(""):'<div class="card"><h3>Specialistų dar nėra sistemoje</h3><p class="muted small" style="margin:0">Tavo mokykla dar neprisijungė prie Future Step. Gali pakviesti ją prisijungti.</p><button class="btn ghost" type="button" data-act="invite">Pakviesti mokyklą</button></div>'))
+   :'<div class="card"><h3>Mokykla nepasirinkta</h3><button class="btn ghost" type="button" data-go="profile">Pasirinkti profilyje</button></div>')+
+ '<p class="section-title">Universitetų karjeros centrai'+(myAreas().length?" pagal tavo sritis":"")+'</p>'+
+ insts.map(k=>{const c=CC(k);return '<div class="card"><h3>'+INST[k].name+'</h3><div class="kv"><span>'+c.unit+'</span>'+c.email+' · '+c.phone+'</div><div class="kv"><span>Darbo laikas</span>'+c.hours+'</div><button class="btn ghost" type="button" data-act="write" data-to="'+esc(INST[k].name+" karjeros centras")+'">Parašyti</button></div>';}).join("")+ex+
+ '</div>'+tabbar();};
+
+/* profile */
+VW.profile=()=>{const sch=school();const top=myAreas();const conf=Object.keys(S.strengthState).filter(k=>S.strengthState[k]==="yes");
+ return header("Profilis","home")+'<div class="content">'+
+ '<div class="card" style="grid-template-columns:auto 1fr;align-items:center"><div class="avatar">'+esc(nm().charAt(0).toUpperCase())+'</div><div><h3>'+esc(nm())+'</h3><p class="muted small" style="margin:0">'+esc(S.grade)+' klasė'+(sch?"<br>"+sch.name+", "+sch.city:"")+'</p></div></div>'+
+ '<div class="card"><h3>Apie mane</h3>'+(S.aboutDone?'<p class="small" style="margin:0">'+esc(S.about)+'</p>'+(top.length?'<p class="small" style="margin:0">Sritys: <b>'+top.join(", ")+'</b></p>':'')+(conf.length?'<p class="small" style="margin:0">Stiprybės: '+conf.join(", ")+'</p>':''):'<p class="empty">Aprašymas dar neparašytas.</p>')+'<button class="btn ghost" type="button" data-go="about">'+(S.aboutDone?"Redaguoti":"Rašyti")+'</button></div>'+
+ '<div class="list"><button type="button" data-go="plans"><span>Planas: <b>'+(premium()?"Premium":"Nemokamas")+'</b></span>'+ICON.chev+'</button><button type="button" data-go="progress"><span>Pažanga ir ženkliukai</span>'+ICON.chev+'</button><button type="button" data-go="folio"><span>Patirties aplankas ir CV</span>'+ICON.chev+'</button></div>'+
+ '<p class="section-title">Nustatymai</p><div class="list">'+
+ '<button type="button" data-act="replayTour"><span>Pakartoti pažintį su Stepu</span>'+ICON.chev+'</button>'+
+ '<button type="button" data-go="notifs"><span>Pranešimai apie naujas programas</span><span class="muted small">'+(S.notifOn?S.notifFreq:"Išjungti")+'</span></button>'+
+ '<button type="button" data-act="changeSchool"><span>Keisti mokyklą</span>'+ICON.chev+'</button>'+
+ '<button type="button" data-act="toggleShare" role="switch" aria-checked="'+S.share+'"><span>Bendrinti rezultatus su mokyklos karjeros specialistu</span><span class="toggle'+(S.share?" on":"")+'"></span></button>'+
+ '<button type="button" data-act="toggleAi" role="switch" aria-checked="'+(!!S.aiConsent)+'"><span>DI pokalbio sutikimas</span><span class="toggle'+(S.aiConsent?" on":"")+'"></span></button>'+
+ '<button type="button" data-act="policy"><span>Privatumo politika</span>'+ICON.chev+'</button>'+
+ '<button type="button" data-act="help"><span>Pagalbos kontaktai</span>'+ICON.chev+'</button>'+
+ '<button type="button" data-act="logout"><span>Atsijungti</span>'+ICON.chev+'</button>'+
+ '<button type="button" data-act="delete"><span class="red">Ištrinti paskyrą</span>'+ICON.chev+'</button></div>'+
+ '</div>'+tabbar();};
+
+/* ---------- render & events ---------- */
+const TOUR=[
+ [".hello","Labas! Aš Stepas, tavo DI pagalbininkas. Per minutę parodysiu, kas kur yra."],
+ ["#hub-me","Žalia spalva – savęs pažinimas. Čia rasi trumpas užduotis ir rinksi taškus. Surinkęs 100 pamatysi, ką sužinojai apie save."],
+ ["#hub-act","Oranžinė – veiklos. Būreliai, programos, savanorystė: vietos, kur gali išbandyti save."],
+ ["#hub-stu","Mėlyna – studijos. Programas surikiuosiu pagal tai, kas tau tinka labiausiai."],
+ ['.tabbar [data-go="chat"]',"Čia gali bet kada su manimi pasikalbėti. Klausk savais žodžiais."],
+ ['.tabbar [data-go="specs"]',"Čia rasi savo mokyklos karjeros specialistus ir universitetų konsultantus."],
+ [".avatar-btn","Profilyje – tavo pažanga, patirties aplankas ir nustatymai."],
+ [null,"Viskas! Pradėkime nuo pirmo žingsnio: papasakok, kas tau sekasi."]];
+function drawTour(){const st=TOUR[S.tour];const app=$("#app");const ar=app.getBoundingClientRect();
+ let holeH="",top=null,bot=null;
+ if(st[0]){const el=app.querySelector(st[0]);if(el){el.scrollIntoView({block:"nearest"});const r=el.getBoundingClientRect();const L=r.left-ar.left-6,T=r.top-ar.top-6,W=r.width+12,H=r.height+12;holeH='<div class="hole" style="left:'+L+'px;top:'+T+'px;width:'+W+'px;height:'+H+'px"></div>';if(T+H/2<ar.height/2)top=T+H+12;else bot=ar.height-T+12;}}
+ const last=S.tour===TOUR.length-1;
+ const pos=top!==null?'top:'+top+'px':bot!==null?'bottom:'+bot+'px':'top:50%;transform:translateY(-50%)';
+ const d=document.createElement("div");d.className="tour";
+ d.innerHTML=(holeH||'<div class="dim"></div>')+'<div class="tbub" role="dialog" aria-live="polite" style="'+pos+'"><span>'+mascot(52,S.tour===0||last)+'</span><p>'+st[1]+'</p><div class="tb"><div class="tdots">'+TOUR.map((x,i)=>'<i class="'+(i===S.tour?"on":"")+'"></i>').join("")+'</div><div class="row" style="gap:6px">'+(last?'':'<button class="btn text" type="button" data-tour="skip" style="width:auto;padding:8px">Praleisti</button>')+'<button class="btn" type="button" data-tour="'+(last?"end":"next")+'" style="width:auto;padding:9px 16px">'+(last?"Pradėkime":"Toliau")+'</button></div></div></div>';
+ app.appendChild(d);}
+function render(){
+ $("#app").innerHTML=VW[S.screen]();
+ document.querySelectorAll("#jump button").forEach(b=>b.classList.toggle("on",b.dataset.j===S.screen));
+ if(S.screen==="about"){const ta=$("#f-about");ta.addEventListener("input",()=>{S.about=ta.value;const w=words(ta.value);const wc=$("#wc");wc.className="wc "+(w>100?"over":(w>=1?"ok":""));$("#wcMsg").textContent=wcMsg(w);$("#wcN").textContent=w+" / 100";$("#analyze").disabled=!(w>=1&&w<=100);});}
+ hooks();
+ if(S.tour!==null&&S.tour!==undefined&&S.screen==="home")drawTour();
+ if(S.screen==="setup"){const i=$("#f-school");if(i){i.addEventListener("input",()=>{S.schoolQuery=i.value;const pos=i.selectionStart;render();const j=$("#f-school");j.focus();j.setSelectionRange(pos,pos);});}}
+}
+function hooks(){
+ if(S.screen==="specs"){const i=$("#specQ");if(i)i.addEventListener("input",()=>{S.specQuery=i.value;const pos=i.selectionStart;render();const j=$("#specQ");j.focus();j.setSelectionRange(pos,pos);});}
+ if(S.screen==="folioAdd"){const f=$("#pf-img");if(f)f.addEventListener("change",()=>{const file=f.files&&f.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{keepDraft();S.draft.img=r.result;S.draft.preview=null;render();};r.readAsDataURL(file);});}
+}
+function keepDraft(){const g=id=>($(id)||{}).value||"";S.draft=Object.assign(S.draft||{},{title:g("#pf-title"),type:g("#pf-type")||"Programa",date:g("#pf-date"),desc:g("#pf-desc")});}
+function needUser(){if(!S.name)S.name="Ieva";if(!S.schoolId)S.schoolId="s1";if(!S.streak&&!S.doneToday)S.streak=6;}
+function analyze(){S.score=detectAreas(S.about);S.strengths=detectStrengths(S.about);S.strengthState={};S.aboutDone=true;if(!S.aboutPts){S.aboutPts=true;S.points+=ABOUT_PTS;}}
+
+const ACT={
+ login(){needUser();if(!S.tourDone)S.tour=0;go("home");toast("Prototipe prisijungimas netikrinamas.");},
+ reg1(){S.name=$("#f-name").value.trim();S.email=$("#f-email").value.trim();go("setup");},
+ reg2(){if(!S.schoolId){toast("Pasirink mokyklą iš sąrašo.");return;}S.privacy=$("#f-priv").checked;if(!S.tourDone)S.tour=0;go("home");},
+ openStudiesTop(){S.stab="lt";S.sview="prog";S.sfilter="Tinka tau";go("studies");},
+ unpick(){S.schoolId="";S.schoolQuery="";render();},
+ changeSchool(){S.schoolId="";S.schoolQuery="";go("setup");},
+ policy(e){e.preventDefault();sheet('<h3>Privatumo politika</h3><ul><li>Renkame vardą arba slapyvardį, el. paštą, mokyklą, klasę ir gimimo metus.</li><li>Aprašymas apie save naudojamas tik patarimams tau.</li><li>Mokyklos karjeros specialistas mato tik tai, ką pats jam parašai.</li><li>DI pokalbiui perduodamos tik pokalbio žinutės, be vardo, mokyklos ir el. pašto.</li><li>Paskyrą ir visus duomenis gali ištrinti bet kada Profilyje.</li></ul><button class="btn" type="button" data-act="close">Supratau</button>');},
+ close(){closeSheet();},
+ ccSheet(e,t){const k=t.dataset.inst;const c=CC(k);sheet('<h3>'+INST[k].name+'</h3><p class="muted small" style="margin:0">'+c.unit+'</p><div class="list"><div class="li"><span>El. paštas</span><b>'+c.email+'</b></div><div class="li"><span>Telefonas</span><b>'+c.phone+'</b></div><div class="li"><span>Darbo laikas</span><b>'+c.hours+'</b></div></div><span class="example">Pavyzdiniai duomenys</span><button class="btn" type="button" data-act="write" data-to="'+esc(INST[k].name+" karjeros centras")+'">Parašyti</button><button class="btn text" type="button" data-act="close">Uždaryti</button>');},
+ specSheet(e,t){const sch=school();const sp=sch.spec[+t.dataset.i];sheet('<h3>'+sp.name+'</h3><p class="muted small" style="margin:0">'+sp.role+' · '+sch.name+'</p><div class="list"><div class="li"><span>Konsultacijos</span><b>'+sp.hours+'</b></div><div class="li"><span>Vieta</span><b>'+sp.room+'</b></div><div class="li"><span>El. paštas</span><b>'+sp.email+'</b></div><div class="li"><span>Telefonas</span><b>'+sp.phone+'</b></div></div><div class="row"><button class="btn ghost" type="button" data-act="write" data-to="'+esc(sp.name)+'">Parašyti</button><button class="btn" type="button" data-act="book" data-to="'+esc(sp.name)+'">Registruotis</button></div>');},
+ sample(){S.about=SAMPLE;render();},
+ analyze(){analyze();go("results");},
+ consent(){sheet('<h3>Prieš pradedant pokalbį</h3><p style="margin:0">Kad galėtų atsakyti, programėlė tavo žinutes ir aprašymą apie save perduos DI paslaugos teikėjui.</p><ul><li>Tavo vardas, mokykla ir el. paštas neperduodami.</li><li>DI įžvalgos yra preliminarios ir nepakeičia mokytojų, tėvų ar karjeros specialistų.</li><li>Sutikimą gali atšaukti Profilyje.</li></ul><button class="btn" type="button" data-act="agree">Sutinku</button><button class="btn ghost" type="button" data-act="close">Ne dabar</button>');},
+ agree(){S.aiConsent=true;closeSheet();if(S.screen==="chat"){render();startChat();}else toast("DI pokalbis įjungtas.");},
+ report(){sheet('<h3>Pranešti apie atsakymą</h3><p class="muted small" style="margin:0">Kas buvo netinkama?</p><div class="opts"><button type="button" data-act="reported">Netinkamas ar įžeidus turinys</button><button type="button" data-act="reported">Neteisinga informacija</button><button type="button" data-act="reported">Neatsakė į mano klausimą</button></div><button class="btn text" type="button" data-act="close">Atšaukti</button>');},
+ reported(){closeSheet();toast("Ačiū. Tikroje programėlėje pranešimas bus perduotas komandai.");},
+ signup(){toast("Prototipe registracijos nuoroda neatidaroma.");},
+ save(e,t){const id=t.dataset.id;const i=S.saved.indexOf(id);if(i>=0)S.saved.splice(i,1);else{S.saved.push(id);toast("Išsaugota. Rasi pradžios ekrane.");}render();},
+ saveStudy(e,t){const id=t.dataset.id;const i=S.savedStudies.indexOf(id);if(i>=0)S.savedStudies.splice(i,1);else{S.savedStudies.push(id);toast("Programa išsaugota. Rasi pradžios ekrane.");}render();if(S.screen==="chat")scrollChat();},
+ saveReflect(e,t){const id=t.dataset.id;const r=S.reflections[id]||{};r.note=$("#f-note").value;r.saved=true;S.reflections[id]=r;if(!S.tried.includes(id))S.tried.push(id);render();},
+ askAbout(e,t){const s=studyById(t.dataset.id);const q="Papasakok apie "+s.prog+" ("+INST[s.inst].name+")";go("chat");if(!S.aiConsent){ACT.consent();return;}send(q);},
+ write(e,t){sheet('<h3>Žinutė</h3><p class="muted small" style="margin:0">Kam: '+esc(t.dataset.to)+'</p><label class="field" for="f-msg"><span style="position:absolute;left:-9999px">Žinutė</span><textarea id="f-msg" rows="5" placeholder="Laba diena, norėčiau pasitarti dėl…"></textarea></label><button class="btn" type="button" data-act="sent" data-to="'+esc(t.dataset.to)+'" data-grade="'+esc(t.dataset.grade||"")+'">Siųsti</button><button class="btn text" type="button" data-act="close">Atšaukti</button>');},
+ sent(e,t){const txt=($("#f-msg")||{}).value||"";const to=t.dataset.to||"";closeSheet();
+   if(S.role==="spec"){const th=S.threads.find(x=>x.student===to);if(th&&txt.trim()){th.msgs.push({me:true,t:txt.trim(),time:"Dabar"});}else if(txt.trim()){S.threads.unshift({id:"t"+Date.now(),student:to,grade:t.dataset.grade||"",msgs:[{me:true,t:txt.trim(),time:"Dabar"}],unread:false});}toast("Žinutė išsiųsta (prototipe).");render();return;}
+   if(!txt.trim()){toast("Žinutė tuščia.");return;}
+   S.myMsgs.unshift({to:to,t:txt.trim()});
+   if(SCHOOLS.some(sc=>sc.spec.some(x=>x.name===to))){S.threads.unshift({id:"mine",student:nm(),grade:S.grade,msgs:[{me:false,t:txt.trim(),time:"Dabar"}],unread:true,mineIdx:0});}
+   toast("Žinutė išsiųsta. Atsakymą matysi skiltyje Specialistai.");render();},
+ book(e,t){const to=t.dataset.to;sheet('<h3>Registracija konsultacijai</h3><p class="muted small" style="margin:0">'+esc(to)+'</p><label class="field" for="b-topic">Tema<input id="b-topic" placeholder="pvz., studijų pasirinkimas"></label><label class="check" for="b-share"><input id="b-share" type="checkbox" checked><span>Leisti specialistui matyti mano rezultatus ir išsaugotas studijas</span></label><p class="label" style="margin:0">Pasirink laiką</p><div class="slots">'+["Antr. 13:00","Antr. 13:30","Ketv. 14:00","Ketv. 14:30"].map(s=>'<button class="chip" type="button" data-slot="'+s+'" data-to="'+esc(to)+'">'+s+'</button>').join("")+'</div><button class="btn text" type="button" data-act="close">Atšaukti</button>');},
+ specLogin(){go("sLogin");},
+ specEnter(){S.role="spec";go("sHome");},
+ toggleShare(){S.share=!S.share;toast(S.share?"Rezultatai bendrinami su karjeros specialistu.":"Bendrinimas išjungtas.");render();},
+ openStudyFromInst(e,t){go("study",{id:t.dataset.id,from:"inst",inst:S.params.id});},
+ consOk(e,t){const c=S.cons.find(x=>x.id===t.dataset.id);c.status="Patvirtinta";toast("Konsultacija patvirtinta. Mokinys gaus pranešimą.");render();},
+ consOther(){toast("Prototipe mokiniui būtų pasiūlytas kitas laikas.");},
+ editHours(){sheet('<h3>Konsultacijų laikas</h3><label class="field" for="h-in">Kada priimate mokinius<input id="h-in" value="'+esc(S.specHours)+'"></label><button class="btn" type="button" data-act="saveHours">Išsaugoti</button><button class="btn text" type="button" data-act="close">Atšaukti</button>');},
+ saveHours(){S.specHours=$("#h-in").value.trim()||S.specHours;closeSheet();render();toast("Laikas atnaujintas.");},
+ addEvent(){sheet('<h3>Naujas renginys</h3><p class="muted small" style="margin:0">Jis atsiras visų jūsų mokyklos mokinių kalendoriuje.</p><label class="field" for="ev-t">Pavadinimas<input id="ev-t" placeholder="pvz., Karjeros diena mokykloje"></label><label class="field" for="ev-d">Data<input id="ev-d" type="date" value="2026-12-10" min="2026-11-15"></label><button class="btn" type="button" data-act="saveEvent">Pridėti</button><button class="btn text" type="button" data-act="close">Atšaukti</button>');},
+ saveEvent(){const t=$("#ev-t").value.trim(),d=$("#ev-d").value;if(!t||!d){toast("Įrašykite pavadinimą ir datą.");return;}S.schoolEvents.push({d:d,t:t});closeSheet();toast("Renginys pridėtas mokinių kalendoriui.");if(S.screen==="calendar")render();},
+ writePupil(e,t){ACT.write(e,{dataset:{to:t.dataset.name,grade:t.dataset.grade}});},
+ doTask(){const t=nextTask();if(!t)return;let a="";if(t.type==="choice"){a=S.params.pick||"";if(!a){toast("Pasirink vieną atsakymą.");return;}}else{a=($("#f-task")||{}).value.trim();if(!a){toast("Parašyk bent kelis žodžius.");return;}}
+   S.taskAnswers[t.id]=a;S.tasksDone.push(t.id);const before=S.points;S.points+=TASK_PTS;
+   const first=!S.doneToday;if(first){S.doneToday=true;S.streak++;}
+   if(before<100&&S.points>=100){go("review");if(first)toast("Knygos įsiliepsnojo! Serija: "+S.streak+" "+dienu(S.streak)+".");}
+   else{go("home");if(first)ACT.streakInfo(null,null,true);else toast("+"+TASK_PTS+" taškų! Iš viso: "+S.points+".");}},
+ streakInfo(e,t,celebrate){const now=new Date();const wd=(now.getDay()+6)%7;const names=["Pr","An","Tr","Kt","Pn","Št","Sk"];
+   const days=names.map((n,i)=>{const lit=i<wd?(wd-i)<=(S.streak-(S.doneToday?1:0)):(i===wd&&S.doneToday);return '<div class="'+(i===wd?"today":"")+'">'+streakIcon(30,lit)+n+'</div>';}).join("");
+   sheet('<div style="display:grid;justify-items:center;gap:6px;text-align:center">'+streakIcon(84,S.doneToday)+'<h3 style="font-size:1.4rem">'+S.streak+' '+((S.streak%10===1&&S.streak%100!==11)?"dienos":"dienų")+' serija</h3>'+
+   '<p class="muted small" style="margin:0">'+(celebrate?'Knygos įsiliepsnojo! +'+TASK_PTS+' taškų. Grįžk rytoj, kad serija tęstųsi.':S.doneToday?'Šiandienos užduotis atlikta. Grįžk rytoj, kad serija tęstųsi.':'Atlik dienos užduotį, ir knygų krūvelė užsidegs.')+'</p></div>'+
+   '<div class="week">'+days+'</div>'+
+   '<p class="muted small" style="margin:0">Jei praleisi dieną, nieko baisaus, tiesiog pradėsi iš naujo. Atostogų ir egzaminų metu seriją galima užšaldyti.</p>'+
+   (S.doneToday?'<button class="btn" type="button" data-act="close">Puiku</button>':'<button class="btn" type="button" data-act="streakGo" style="background:var(--me);border-color:var(--me)">Atlikti dienos užduotį</button><button class="btn text" type="button" data-act="close">Vėliau</button>'));},
+ streakGo(){closeSheet();if(taskLimited()||!nextTask())go("plans");else go("task");},
+ replayTour(){S.tour=0;go("home");},
+ toPrograms(){S.filter="Tinka tau";go("acts");},
+ toggleNotif(){S.notifOn=!S.notifOn;render();},
+ toggleMine(){S.specMine=!S.specMine;render();},
+ setPlan(e,t){S.plan=t.dataset.v;render();renderPlanSwitch();toast(S.plan==="premium"?"Premium įjungtas (prototipe).":"Grįžta į nemokamą planą.");},
+ suggestSchool(){toast("Prototipe pasiūlymas mokyklai nesiunčiamas.");},
+ makeEntry(){keepDraft();const d=S.draft;if(!d.title.trim()){toast("Įrašyk pavadinimą.");return;}
+   const dt=d.date?d.date.replace("-"," m. ")+" mėn.":"";d.preview=d.type+": „"+d.title.trim()+"“"+(dt?", "+dt:"")+". "+(d.desc.trim()?d.desc.trim().replace(/\.?$/,"."):"")+(d.img?" Pridėta pažymėjimo nuotrauka.":"");render();},
+ saveFolio(){keepDraft();const d=S.draft;S.portfolio.unshift({id:"p"+Date.now(),title:d.title.trim(),type:d.type,date:d.date,desc:d.desc.trim()||"Dalyvavau šioje veikloje.",img:d.img||null,inCV:true});S.draft=null;go("folio");toast("Įrašas išsaugotas aplanke.");},
+ addFromAct(e,t){const a=actById(t.dataset.id);const r=S.reflections[a.id]||{};S.portfolio.unshift({id:"p"+Date.now(),src:a.id,title:a.name,type:"Programa",date:"2026-11",desc:r.note?r.note:"Išbandžiau šią veiklą.",img:null,inCV:true});render();toast("Pridėta į aplanką.");},
+ copyCV(){const c=cvText();const txt=c.name+"\n"+c.line+" · "+c.email+"\n\n"+(c.about?"APIE MANE\n"+c.about+".\n\n":"")+"PATIRTIS\n"+c.items.map(p=>"- "+p.title+" ("+p.type+(p.date?", "+p.date:"")+"): "+p.desc).join("\n")+(c.str.length?"\n\nSTIPRYBĖS\n"+c.str.join(", "):"");
+   navigator.clipboard.writeText(txt).then(()=>toast("CV tekstas nukopijuotas."),()=>toast("Nukopijuoti nepavyko. Pažymėk tekstą ranka."));},
+ invite(){toast("Prototipe kvietimas nesiunčiamas.");},
+ toggleAi(){if(S.aiConsent){S.aiConsent=false;toast("DI pokalbio sutikimas atšauktas.");render();}else ACT.consent();},
+ help(){sheet('<h3>Pagalbos kontaktai</h3><p style="margin:0">Jei sunku, pasikalbėk su suaugusiuoju, kuriuo pasitiki, arba paskambink:</p><div class="list"><div class="li"><span>Vaikų linija</span><b>116 111</b></div><div class="li"><span>Jaunimo linija</span><b>8 800 28888</b></div><div class="li"><span>Skubi pagalba</span><b>112</b></div></div><button class="btn" type="button" data-act="close">Uždaryti</button>');},
+ logout(){S.role="student";go("welcome");},
+ delete(){sheet('<h3>Ištrinti paskyrą?</h3><p style="margin:0">Bus ištrinti visi tavo aprašymai, pokalbiai ir išsaugoti dalykai. To atšaukti negalima.</p><button class="btn danger" type="button" data-act="confirmDelete">Ištrinti visam laikui</button><button class="btn ghost" type="button" data-act="close">Atšaukti</button>');},
+ confirmDelete(){S=fresh();render();toast("Paskyra ištrinta.");}
+};
+
+document.addEventListener("click",e=>{
+ const t=e.target.closest("button,a[data-act]");if(!t||!t.closest(".phone,#jump"))return;
+ if(t.dataset.tour){const v=t.dataset.tour;if(v==="next"){S.tour++;render();}else{S.tour=null;S.tourDone=true;if(v==="end"){go(S.aboutDone?"task":"about");}else render();}return;}
+ if(t.dataset.go){const g=t.dataset.go;if(g==="inst"&&!t.dataset.id&&S.params.inst)go(g,{id:S.params.inst});else if(["act","reflect","study","inst","sThread","sPupil","spec"].includes(g))go(g,{id:t.dataset.id||S.params.id});else go(g);if(g==="chat"&&S.aiConsent)startChat();return;}
+ if(t.dataset.act&&ACT[t.dataset.act]){ACT[t.dataset.act](e,t);return;}
+ if(t.dataset.school){S.schoolId=t.dataset.school;render();return;}
+ if(t.dataset.grade){S.grade=t.dataset.grade;render();return;}
+ if(t.dataset.str){const s=t.dataset.str;S.strengthState[s]=S.strengthState[s]===t.dataset.v?"":t.dataset.v;render();return;}
+ if(t.dataset.filter){S.filter=t.dataset.filter;render();return;}
+ if(t.dataset.sfilter){S.sfilter=t.dataset.sfilter;render();return;}
+ if(t.dataset.feel){const id=S.params.id;const r=S.reflections[id]||{};r.v=t.dataset.feel;r.saved=false;const n=$("#f-note");if(n)r.note=n.value;S.reflections[id]=r;render();return;}
+ if(t.dataset.chip){const c=CH3[+t.dataset.chip];if(c)send(c);return;}
+ if(t.dataset.slot){const topic=($("#b-topic")||{}).value||"Studijų pasirinkimas";const sh=$("#b-share");if(sh&&sh.checked)S.share=true;S.booking={slot:t.dataset.slot,to:t.dataset.to};S.cons=S.cons.filter(c=>c.id!=="mine");S.cons.unshift({id:"mine",student:nm(),grade:S.grade,slot:t.dataset.slot,date:SLOT_DATE[t.dataset.slot],topic:topic.trim()||"Studijų pasirinkimas",status:"Laukia"});closeSheet();render();toast("Užregistruota. Specialistas patvirtins laiką.");return;}
+ if(t.dataset.stab){S.stab=t.dataset.stab;render();return;}
+ if(t.dataset.pick!==undefined){S.params.pick=t.dataset.pick;render();return;}
+ if(t.dataset.freq){S.notifFreq=t.dataset.freq;render();return;}
+ if(t.dataset.stype){S.specType=t.dataset.stype;render();return;}
+ if(t.dataset.sview){S.sview=t.dataset.sview;render();return;}
+ if(t.dataset.efilter){S.efilter=t.dataset.efilter;render();return;}
+ if(t.dataset.rem!==undefined){const k=t.dataset.rem;S.reminders[k]=!S.reminders[k];toast(S.reminders[k]?"Priminimas įjungtas.":"Priminimas išjungtas.");render();return;}
+ if(t.dataset.j){jump(t.dataset.j);return;}
+});
+document.addEventListener("change",e=>{const c=e.target;if(c.dataset&&c.dataset.incv){const p=S.portfolio.find(x=>x.id===c.dataset.incv);if(p)p.inCV=c.checked;}});
+document.addEventListener("submit",e=>{
+ if(e.target.id==="replyForm"){e.preventDefault();const v=$("#replyIn").value.trim();if(!v)return;const th=S.threads.find(x=>x.id===e.target.dataset.id);th.msgs.push({me:true,t:v,time:"Dabar"});if(th.id==="mine"&&S.myMsgs.length)S.myMsgs[0].reply=v;render();const c=$("#chat");if(c)c.scrollTop=c.scrollHeight;return;}
+ if(e.target.id!=="chatForm")return;e.preventDefault();const v=$("#chatIn").value;send(v);});
+
+const JUMPS=[["#","Mokinio pusė"],["welcome","Pradžios ekranas"],["register","Registracija"],["setup","Mokyklos pasirinkimas"],["tour","Pažintis su Stepu (turas)"],["home","Pradžia"],["calendar","Svarbių datų kalendorius"],["about","Apie mane (aprašymas)"],["results","Ką supratau"],["chat","DI pokalbis"],["acts","Veiklos"],["act","Veiklos aprašas"],["reflect","Apmąstymas po veiklos"],["studies","Studijos"],["study","Studijų programa"],["inst","Universiteto puslapis"],["abroad","Užsienis"],["progress","Užduotys ir taškai"],["task","Savęs pažinimo užduotis"],["review","Apžvalga po 100 taškų"],["notifs","Pranešimai"],["specs","Specialistų paieška"],["spec","Specialisto profilis"],["folio","Patirties aplankas"],["folioAdd","Naujas įrašas"],["cv","CV juodraštis"],["plans","Planai"],["profile","Profilis ir nustatymai"],
+ ["#","Karjeros specialisto pusė"],["sLogin","Prisijungimas"],["sHome","Apžvalga"],["sCons","Konsultacijos"],["sMsgs","Žinutės"],["sPupils","Mokiniai"],["sPupil","Mokinio profilis"],["sCal","Kalendorius"]];
+$("#jump").innerHTML=JUMPS.map(j=>j[0]==="#"?'<p class="label" style="margin:10px 0 2px 10px">'+j[1]+'</p>':'<button type="button" data-j="'+j[0]+'">'+j[1]+'</button>').join("");
+function jump(id){
+ closeSheet();S.tour=null;
+ const specScreens=["sLogin","sHome","sCons","sMsgs","sPupils","sPupil","sCal"];
+ if(specScreens.includes(id)){ if(id==="sLogin"){S.role="student";go("sLogin");return;} S.role="spec";
+   if(id==="sCal"){S.efilter="Visi";go("calendar");return;} if(id==="sPupil"){go("sPupil",{id:0});return;} go(id);return;}
+ S.role="student";
+ if(id==="abroad"){needUser();S.stab="abroad";go("studies");return;}
+ if(id==="tour"){needUser();S.tour=0;go("home");return;}
+ if(id==="spec"){needUser();go("spec",{id:"sp3"});return;}
+ if(id==="review"){needUser();if(!S.aboutDone){S.about=SAMPLE;analyze();}if(S.points<100){S.tasksDone=["t1","t2","t3"];S.taskAnswers={t1:"Padėjau draugui pasiruošti kontroliniam, patiko matyti, kad jam pavyko.",t2:"Matematikos",t3:"Norėčiau išmokti programuoti."};S.points=100;}go("review");return;}
+ if(id==="cv"){needUser();if(!S.aboutDone){S.about=SAMPLE;analyze();}}
+ if(id==="plans"){needUser();go("plans",{from:"profile"});return;}
+ if(id==="studies")S.stab="lt";
+ if(id==="inst"){needUser();go("inst",{id:"VU"});return;}
+ if(!["welcome","register","setup"].includes(id))needUser();
+ if(id==="results"&&!S.aboutDone){S.about=SAMPLE;analyze();}
+ if(id==="act"||id==="reflect"){go(id,{id:actById(S.params.id)?S.params.id:"seseliavimas"});return;}
+ if(id==="study"){go(id,{id:studyById(S.params.id)?S.params.id:"vu-ek"});return;}
+ go(id);
+ if(id==="chat"){if(!S.aiConsent)ACT.consent();else startChat();}
+}
+function renderPlanSwitch(){document.querySelectorAll("#planSwitch button").forEach(b=>b.classList.toggle("on",b.dataset.plan===S.plan));}
+document.getElementById("planSwitch").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.plan=b.dataset.plan;renderPlanSwitch();render();});
+renderPlanSwitch();
+render();
+})();
+</script>
+</body>
+</html>
